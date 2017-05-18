@@ -1,0 +1,48 @@
+{
+  "name": "@player1os/knex-wrapper",
+  "version": "1.0.0",
+  "description": "A thin promise based wrapper for the knex module that takes care of instance creation and connecting/disconnecting",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "webpack",
+    "prepublish": "npm test && npm run build",
+    "test": "mocha -r ts-node/register test/index.test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Player1os/node-js-package.git"
+  },
+  "keywords": [
+    "knex",
+    "wrapper"
+  ],
+  "author": "Osama Hassanein <player1os@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Player1os/node-js-package/issues"
+  },
+  "homepage": "https://github.com/Player1os/node-js-package#readme",
+  "devDependencies": {
+    "@types/chai": "^3.5.2",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.18",
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.4.0",
+    "chai": "^3.5.0",
+    "mocha": "^3.4.1",
+    "ts-loader": "^2.0.3",
+    "ts-node": "^3.0.4",
+    "tslint": "^5.2.0",
+    "tslint-config-airbnb": "^5.0.1",
+    "tsutils": "=1.6.0",
+    "typescript": "^2.3.2",
+    "webpack": "^2.5.1"
+  },
+  "dependencies": {
+    "@player1os/config": "^1.1.6",
+    "knex": "^0.13.0"
+  }
+}
