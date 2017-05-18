@@ -9,7 +9,7 @@ import * as path from 'path'
 
 // Load the project's knex configuration.
 // tslint:disable-next-line:no-var-requires
-const knexConfig = require(path.join(config.APP_ROOT_PATH, 'knexFile.js'))
+const knexConfig = __non_webpack_require__(`${config.APP_ROOT_PATH}${path.sep}knexFile.js`)
 
 // Expose the knex connection wrapper.
 export default {
