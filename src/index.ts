@@ -2,14 +2,14 @@
 import config from '@player1os/config'
 
 // Load npm modules.
-import knex from 'knex'
+import * as knex from 'knex'
+import * as lodash from 'lodash'
 
 // Load node modules.
 import * as path from 'path'
 
 // Load the project's knex configuration.
-// tslint:disable-next-line:no-var-requires
-const knexConfig = __non_webpack_require__(`${config.APP_ROOT_PATH}${path.sep}knexFile.js`)
+const knexConfig = __non_webpack_require__(path.join(config.APP_ROOT_PATH, 'knexFile.js'))
 
 // Expose the knex connection wrapper.
 export default {
@@ -33,18 +33,18 @@ export default {
 			this.isConnected = true
 		}
 
-		// Return the connection parameters.
-		return Object.assign({}, knexConfig.connection || {})
+		// Return a copy of the connection parameters.
+		return lodash.clone(knexConfig.connection) || {}
 	},
 	// Disconnect from PostgreSQL through knex.
 	async disconnect() {
-		// Decrement semaphore.
-		(--this.semaphore)
-
 		// Determine if the disconnect method was used incorrectly.
-		if (this.semaphore === -1) {
+		if (this.semaphore === 0) {
 			throw new Error('Disconnect invoked before connect.')
 		}
+
+		// Decrement semaphore.
+		(--this.semaphore)
 
 		// Do nothing if not enough embeded connections were disconnected.
 		if (this.semaphore > 0) {
