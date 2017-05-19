@@ -13,7 +13,7 @@ const knexConfig = __non_webpack_require__(path.join(config.APP_ROOT_PATH, 'knex
 
 // Expose the knex connection wrapper.
 export default {
-	// Define the is connected flag.
+	// Define the is_connected flag.
 	isConnected: false,
 	// Define the knex instance.
 	instance: knex({
@@ -21,22 +21,22 @@ export default {
 	}),
 	// Define the connection semaphore.
 	semaphore: 0,
-	// Connect to PostgreSQL through knex.
+	// Connect to the underlying database through knex.
 	async connect() {
-		// Increment semaphore.
-		(++this.semaphore)
-
-		// Defermine if perform the actual connecting is needed.
-		if (this.semaphore === 1) {
+		// Defermine whether a connection has already been established.
+		if (this.semaphore === 0) {
 			// Create the knex instance based on the config.
 			this.instance = knex(knexConfig)
 			this.isConnected = true
 		}
 
+		// Increment semaphore.
+		(++this.semaphore)
+
 		// Return a copy of the connection parameters.
 		return lodash.clone(knexConfig.connection) || {}
 	},
-	// Disconnect from PostgreSQL through knex.
+	// Disconnect from the underlying database through knex.
 	async disconnect() {
 		// Determine if the disconnect method was used incorrectly.
 		if (this.semaphore === 0) {
@@ -46,12 +46,12 @@ export default {
 		// Decrement semaphore.
 		(--this.semaphore)
 
-		// Do nothing if not enough embeded connections were disconnected.
+		// Do nothing if the connect method wasn't called a sufficient number of times.
 		if (this.semaphore > 0) {
 			return
 		}
 
-		// Perform the actual disconnecting.
+		// End the connection to the database.
 		await this.instance.destroy()
 
 		// Reset the knex instance.
