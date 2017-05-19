@@ -2,9 +2,6 @@
 .DS_Store
 Thumbs.db
 
-# IDEs configuration files.
-.vscode/*
-
 # NPM generated files.
 node_modules/*
 npm-debug.log*

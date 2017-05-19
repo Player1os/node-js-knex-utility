@@ -12,7 +12,7 @@ indent_style = tab
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[{**/*.json,**/*.ejs,**/.eslintrc,**/.babelrc,messages/*.js}]
+[{**/*.json,**/.babelrc}]
 indent_size = 2
 
 [{package.json,build/**/*,node_modules/**/*}]

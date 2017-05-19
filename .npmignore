@@ -3,6 +3,7 @@ src/
 .editorconfig
 .gitattributes
 .gitignore
+.node-version
 tsconfig.json
 tslint.json
-webpack.config.js
+webpack.config.ts

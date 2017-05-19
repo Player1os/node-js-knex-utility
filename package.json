@@ -3,14 +3,22 @@
   "version": "1.0.0",
   "description": "A thin promise based wrapper for the knex module that takes care of instance creation and connecting/disconnecting",
   "main": "lib/index.js",
+  "engines": {
+    "node": "~6.9.3",
+    "npm": "~3.10.10"
+  },
   "scripts": {
+    "preversion": "npm run lint && npm test && npm run build",
+    "postversion": "git push && git push --tags",
     "build": "webpack",
-    "prepublish": "npm test && npm run build",
-    "test": "mocha -r ts-node/register test/index.test.ts"
+    "lint": "tslint {./,src/**/,task/**/,test/**/}*.ts --type-check --project ./tsconfig.json",
+    "start": "ts-node -r module-alias/register src/index.ts",
+    "start:build": "node lib/index.js",
+    "test": "mocha --compilers ts:ts-node/register -r module-alias/register test/index.test.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Player1os/node-js-package.git"
+    "url": "git+https://github.com/Player1os/node-js-knex-wrapper.git"
   },
   "keywords": [
     "knex",
@@ -19,9 +27,9 @@
   "author": "Osama Hassanein <player1os@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Player1os/node-js-package/issues"
+    "url": "https://github.com/Player1os/node-js-knex-wrapper/issues"
   },
-  "homepage": "https://github.com/Player1os/node-js-package#readme",
+  "homepage": "https://github.com/Player1os/node-js-knex-wrapper#readme",
   "devDependencies": {
     "@types/chai": "^3.5.2",
     "@types/mocha": "^2.2.41",
@@ -35,6 +43,7 @@
     "babel-preset-env": "^1.4.0",
     "chai": "^3.5.0",
     "mocha": "^3.4.1",
+    "module-alias": "^2.0.0",
     "ts-loader": "^2.0.3",
     "ts-node": "^3.0.4",
     "tslint": "^5.2.0",
@@ -46,5 +55,8 @@
   "dependencies": {
     "@player1os/config": "^1.1.6",
     "knex": "^0.13.0"
+  },
+  "_moduleAliases": {
+    "#": "."
   }
 }
