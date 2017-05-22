@@ -23,6 +23,21 @@ All tasks are defined in as npm scripts:
 - Running the code linter: `npm run lint`
 - Running the code linter in watch mode: `npm run lint:watch`
 
+## Creating a new library
+
+Follow these instructions to create a new forked library repository:
+1. Fork this repository on github.
+2. Setup the repository locally.
+3. Add a remote by entering `git remote add base git@github.com:Player1os/node-js-library.git`
+or `git remote add base https://github.com/Player1os/node-js-library.git`.
+
+## Updating the new library with changes from the base
+
+Follow these instructions to update the new library:
+1. Fetch the base repository's branches `git fetch base`.
+2. Make sure you are in the library's master branch `git checkout master`.
+3. Rebase the library's master branch to the base repository's master `git rebase upstream/master`.
+
 ## Developement
 
 It is is recommended to run the following scripts in seperate windows during development:
@@ -41,5 +56,4 @@ Follow these instructions, when a new version is ready to be published:
 ## TODO
 
 - Add NYC code coverage.
-- Minify and obfuscate the bundle code.
 - Correctly setup the vscode launch configuration.

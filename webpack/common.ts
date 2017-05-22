@@ -1,6 +1,3 @@
-// Load npm modules.
-import * as webpack from 'webpack'
-
 // Load node modules.
 import * as fs from 'fs'
 import * as path from 'path'
@@ -42,18 +39,6 @@ export default {
 			},
 		],
 	},
-	plugins: [
-		new webpack.BannerPlugin({
-			banner: [
-				"require('source-map-support').install();",
-			].join('\n'),
-			raw: true,
-			entryOnly: false,
-		}),
-		new webpack.ProvidePlugin({
-			Promise: 'bluebird',
-		}),
-	],
 	resolve: {
 		// Specify that the '#' character in imports should be resolved to the project's root path.
 		alias: {

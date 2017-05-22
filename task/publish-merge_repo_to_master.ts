@@ -1,12 +1,15 @@
+// Setup the promise library.
+import * as Promise from 'bluebird'
+global.Promise = Promise
+
 // Load scoped modules.
 import spawnProcessPromise from 'spawn-process-promise'
 
 // Load npm modules.
-import * as Bluebird from 'bluebird'
 import gitRev from 'git-rev'
 
 // Promisify callback methods.
-const gitBranchAsync = Bluebird.promisify(gitRev.branch)
+const gitBranchAsync = Promise.promisify(gitRev.branch)
 
 // Define the asynchronous task.
 const execute = async () => {
