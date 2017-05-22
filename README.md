@@ -50,8 +50,9 @@ It is is recommended to run the following scripts in seperate windows during dev
 
 Follow these instructions, when a new version is ready to be published:
 1. Commit and push the final changes to the topic branch of the git repository.
-2. Run the `npm version` script choosing the `patch`, `minor` or `major` depending on the significance of the changes to be applied.
-3. Run the `npm publish` script to publish the package to the npm registry.
+2. Create a pull request in the origin repository and await approval (a quick check can be done by running `npm run validate`).
+3. After approval, run the `npm version [significance]` script choosing the `patch`, `minor` or `major` as the second argument depending
+on the significance of the changes to be applied. This will automatically publish the package to the npm registry.
 
 ## TODO
 
