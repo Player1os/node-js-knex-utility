@@ -7,7 +7,7 @@
 		{
 			"type": "node",
 			"request": "launch",
-			"name": "Launch Program",
+			"name": "Launch Tests",
 			"program": "${workspaceRoot}\\build\\test\\index.test.js",
 			"outFiles": []
 		},
