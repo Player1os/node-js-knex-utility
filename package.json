@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/Player1os/node-js-library#readme",
   "devDependencies": {
+    "@player1os/tslint-config": "^1.0.2",
     "@types/bluebird-global": "^3.5.2",
     "@types/chai": "^3.5.2",
     "@types/mocha": "^2.2.41",
@@ -52,8 +53,7 @@
     "mocha": "^3.4.1",
     "ts-node": "^3.0.4",
     "tslint": "^5.2.0",
-    "tslint-config-airbnb": "^5.0.1",
-    "tsutils": "=1.6.0",
+    "tsutils": "1.6.0",
     "typescript": "^2.3.2",
     "webpack": "^2.5.1"
   }
