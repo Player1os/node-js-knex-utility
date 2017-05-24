@@ -9,5 +9,6 @@ webpack/
 .gitattributes
 .gitignore
 .node-version
+README.md
 tsconfig.json
 tslint.json
