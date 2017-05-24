@@ -1,5 +1,3 @@
 {
-	"extends": [
-		"@player1os/tslint-config"
-	]
+	"extends": "@player1os/tslint-config"
 }
