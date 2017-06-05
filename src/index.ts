@@ -18,12 +18,9 @@ export const isConnected = () => {
 }
 
 // Define the knex instance.
-let _instance = Knex({
+export let instance = Knex({
 	client: knexConfig.client,
 })
-export const instance = () => {
-	return _instance
-}
 
 // Define the connection semaphore.
 let semaphore = 0
