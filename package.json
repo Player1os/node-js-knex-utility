@@ -1,7 +1,7 @@
 {
-  "name": "library",
-  "version": "1.0.0",
-  "description": "A base library from which other libraries can be derived",
+  "name": "@player1os/knex-wrapper",
+  "version": "1.0.2",
+  "description": "A thin promise based wrapper for the knex module that takes care of instance creation and connecting/disconnecting",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "engines": {
@@ -25,22 +25,29 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Player1os/node-js-library.git"
+    "url": "git+https://github.com/Player1os/node-js-knex-wrapper.git"
   },
   "keywords": [
-    "library"
+    "knex",
+    "wrapper"
   ],
   "author": "Osama Hassanein <player1os@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Player1os/node-js-library/issues"
+    "url": "https://github.com/Player1os/node-js-knex-wrapper/issues"
   },
-  "homepage": "https://github.com/Player1os/node-js-library#readme",
+  "homepage": "https://github.com/Player1os/node-js-knex-wrapper#readme",
+  "dependencies": {
+    "@player1os/config": "^1.1.6",
+    "knex": "^0.13.0",
+    "lodash": "^4.17.4"
+  },
   "devDependencies": {
     "@player1os/bluebird-global": "^1.0.0",
     "@player1os/tslint-config": "^1.1.1",
     "@types/bluebird-global": "^3.5.2",
     "@types/chai": "^4.0.0",
+    "@types/knex": "0.0.53",
     "@types/mocha": "^2.2.41",
     "@types/node": "^7.0.21",
     "@types/webpack": "^2.2.15",
