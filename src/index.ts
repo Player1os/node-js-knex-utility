@@ -30,7 +30,7 @@ export const connect = async () => {
 	// Defermine whether a connection has already been established.
 	if (semaphore === 0) {
 		// Create the knex instance based on the config.
-		_instance = Knex(knexConfig)
+		instance = Knex(knexConfig)
 		_isConnected = true
 	}
 
@@ -57,10 +57,10 @@ export const disconnect = async () => {
 	}
 
 	// Perform the actual disconnecting.
-	await _instance.destroy()
+	await instance.destroy()
 
 	// Reset the knex instance.
-	_instance = Knex({
+	instance = Knex({
 		client: knexConfig.client,
 	})
 	_isConnected = false
