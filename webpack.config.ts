@@ -12,6 +12,9 @@ export default {
 		path.join(__dirname, 'src', 'index.ts'),
 	],
 	output: {
+		// Make sure that the bundle is built as a library that exports objects.
+		library: 'library',
+		libraryTarget: 'commonjs2',
 		// Define the directory for the compilation output.
 		path: path.join(__dirname, 'build', 'lib'),
 		// Define the name for the compilation output.
