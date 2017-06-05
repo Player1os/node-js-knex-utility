@@ -9,7 +9,7 @@ import * as lodash from 'lodash'
 import * as path from 'path'
 
 // Load the project's knex configuration.
-const knexConfig = __non_webpack_require__(path.join(config.APP_ROOT_PATH, 'knexFile.js'))
+const knexConfig = __non_webpack_require__(path.join(config.APP_ROOT_PATH, 'knexfile.ts'))
 
 // Define the is connected flag.
 let _isConnected = false
