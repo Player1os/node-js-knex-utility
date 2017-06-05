@@ -9,8 +9,8 @@
     "npm": "~3.10.10"
   },
   "scripts": {
-    "preversion": "git checkout . && git checkout master && git pull && npm run validate",
-    "postversion": "git push && git push --tags && npm run clean && npm run build && npm run copy_build_to_lib && npm publish",
+    "preversion": "git checkout . && git checkout master && git pull && npm run validate && npm run clean && npm run build && npm run copy_build_to_lib",
+    "postversion": "git push && git push --tags && npm publish",
     "build": "webpack",
     "build:watch": "npm run build -- --watch",
     "clean": "rimraf .awcache && rimraf build/* && rimraf lib/*",
