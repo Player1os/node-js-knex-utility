@@ -1,44 +1,27 @@
-// Load scoped modules.
-import config from '@player1os/config'
-
 // Load npm modules.
 import * as Knex from 'knex'
 import * as lodash from 'lodash'
 
-// Load node modules.
-import * as path from 'path'
-
-// Load the project's knex configuration.
-const knexConfig = __non_webpack_require__(path.join(config.APP_ROOT_PATH, 'knexfile.ts'))
-
 // Define the is connected flag.
-let _isConnected = false
-export const isConnected = () => {
-	return _isConnected
-}
+export let isConnected = false
 
 // Define the knex instance.
-export let instance = Knex({
-	client: knexConfig.client,
-})
+export let instance: Knex | null = null
 
 // Define the connection semaphore.
 let semaphore = 0
 
 // Connect to the database through knex.
-export const connect = async () => {
+export const connect = async (knexConfig: Knex.Config) => {
 	// Defermine whether a connection has already been established.
 	if (semaphore === 0) {
 		// Create the knex instance based on the config.
 		instance = Knex(knexConfig)
-		_isConnected = true
+		isConnected = true
 	}
 
 	// Increment semaphore.
 	(++semaphore)
-
-	// Return the connection parameters.
-	return lodash.clone(knexConfig.connection) || {}
 }
 
 // Disconnect from the database through knex.
@@ -60,10 +43,8 @@ export const disconnect = async () => {
 	await instance.destroy()
 
 	// Reset the knex instance.
-	instance = Knex({
-		client: knexConfig.client,
-	})
-	_isConnected = false
+	instance = null
+	isConnected = false
 }
 
 export const outputSqlString = (inputs: Knex.QueryBuilder | Knex.QueryBuilder[] | Knex.SchemaBuilder | Knex.SchemaBuilder[]) => {

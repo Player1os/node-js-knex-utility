@@ -39,7 +39,6 @@
   },
   "homepage": "https://github.com/Player1os/node-js-knex-wrapper#readme",
   "dependencies": {
-    "@player1os/config": "^1.1.6",
     "knex": "^0.13.0",
     "lodash": "^4.17.4"
   },
