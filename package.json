@@ -1,6 +1,6 @@
 {
   "name": "@player1os/knex-wrapper",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A thin promise based wrapper for the knex module that takes care of instance creation and connecting/disconnecting",
   "private": false,
   "main": "lib/index.js",
