@@ -13,7 +13,10 @@ export class KnexWrapper {
 	// Define the connection semaphore.
 	private semaphore = 0
 
-	// Connect to the database through knex.
+	/**
+	 * Connects to the database through knex.
+	 * @param knexConfig The configutation that can be usually obtained from the knexfile.
+	 */
 	async connect(knexConfig: Knex.Config) {
 		// Defermine whether a connection has already been established.
 		if (this.semaphore === 0) {
@@ -26,7 +29,9 @@ export class KnexWrapper {
 		(++this.semaphore)
 	}
 
-	// Disconnect from the database through knex.
+	/**
+	 * Disconnects from the database through knex.
+	 */
 	async disconnect() {
 		// Determine if the disconnect method was used incorrectly.
 		if (this.semaphore === 0) {
@@ -49,18 +54,29 @@ export class KnexWrapper {
 		this.isConnected = false
 	}
 
-	async transaction(callback: (trx: Knex.Transaction) => Promise<any>, trx: Knex.Transaction = null) {
+	/**
+	 * Ensures that either the passed transaction is used or a new one is created within the provided function.
+	 */
+	async transaction<T>(callback: (trx: Knex.Transaction) => Promise<T>, trx: Knex.Transaction = null): Promise<T> {
+		// If a transaction is provided use it.
 		if (trx) {
 			return callback(trx)
 		}
 
+		// Otherwise if an instance is available use it to create a new transaction.
 		if (this.instance) {
 			return this.instance.transaction(callback)
 		}
+
+		// Otherwise return null.
+		return null
 	}
 }
 
-// Define and expose a helper function for outputing query builders into sql strings.
+/**
+ * Define and expose a helper function for outputing query builders into sql strings.
+ * @param inputs Any knex expression that can be used to output an SQL string.
+ */
 export const outputSqlString = (inputs: Knex.QueryBuilder | Knex.QueryBuilder[] | Knex.SchemaBuilder | Knex.SchemaBuilder[]) => {
 	const processedInputs = lodash.isArray(inputs)
 		? inputs
@@ -71,7 +87,10 @@ export const outputSqlString = (inputs: Knex.QueryBuilder | Knex.QueryBuilder[] 
 	}).join('\n\n')
 }
 
-// Define and expose a helper function for altering columns within a schema.
+/**
+ * Define and expose a helper function for altering columns within a schema.
+ * @param columnBuilder The knex expression defining the column to be altered.
+ */
 export const alterColumn = (columnBuilder: Knex.ColumnBuilder): Knex.ColumnBuilder => {
 	return (columnBuilder as any).alter()
 }
