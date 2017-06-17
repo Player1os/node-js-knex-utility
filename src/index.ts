@@ -5,13 +5,17 @@ import * as lodash from 'lodash'
 // Expose the class for the main knex wrapper.
 export class KnexWrapper {
 	// Define the knex instance.
-	public instance: Knex = null
-
-	// Define the is connected flag.
-	public isConnected = false
+	public instance: Knex | null = null
 
 	// Define the connection semaphore.
 	private semaphore = 0
+
+	/**
+	 * Define the is connected flag.
+	 */
+	isConnected() {
+		return this.instance !== null
+	}
 
 	/**
 	 * Connects to the database through knex.
@@ -22,7 +26,6 @@ export class KnexWrapper {
 		if (this.semaphore === 0) {
 			// Create the knex instance based on the config.
 			this.instance = Knex(knexConfig)
-			this.isConnected = true
 		}
 
 		// Increment the semaphore.
@@ -47,17 +50,15 @@ export class KnexWrapper {
 		}
 
 		// Perform the actual disconnecting.
-		await this.instance.destroy()
-
-		// Reset the knex instance.
-		this.instance = null
-		this.isConnected = false
+		if (this.instance) {
+			await this.instance.destroy()
+		}
 	}
 
 	/**
 	 * Ensures that either the passed transaction is used or a new one is created within the provided function.
 	 */
-	async transaction<T>(callback: (trx: Knex.Transaction) => Promise<T>, trx: Knex.Transaction = null): Promise<T> {
+	async transaction<T>(callback: (trx: Knex.Transaction) => Promise<T>, trx: Knex.Transaction | null = null): Promise<T | null> {
 		// If a transaction is provided use it.
 		if (trx) {
 			return callback(trx)
