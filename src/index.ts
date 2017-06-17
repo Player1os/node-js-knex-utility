@@ -5,16 +5,27 @@ import * as lodash from 'lodash'
 // Expose the class for the main knex wrapper.
 export class KnexWrapper {
 	// Define the knex instance.
-	public instance: Knex | null = null
+	private _instance: Knex | null = null
 
 	// Define the connection semaphore.
-	private semaphore = 0
+	private _semaphore = 0
 
 	/**
-	 * Define the is connected flag.
+	 * Retrieves the connected state of the internal instance.
 	 */
 	isConnected() {
-		return this.instance !== null
+		return this._instance !== null
+	}
+
+	/**
+	 * Retrieves the internal instance if it is connected. Otherwise throws an error.
+	 */
+	get instance() {
+		if (!this._instance) {
+			throw new Error('The knex instance has not been initialized.')
+		}
+
+		return this._instance
 	}
 
 	/**
@@ -23,13 +34,13 @@ export class KnexWrapper {
 	 */
 	async connect(knexConfig: Knex.Config) {
 		// Defermine whether a connection has already been established.
-		if (this.semaphore === 0) {
+		if (this._semaphore === 0) {
 			// Create the knex instance based on the config.
-			this.instance = Knex(knexConfig)
+			this._instance = Knex(knexConfig)
 		}
 
 		// Increment the semaphore.
-		(++this.semaphore)
+		(++this._semaphore)
 	}
 
 	/**
@@ -37,21 +48,21 @@ export class KnexWrapper {
 	 */
 	async disconnect() {
 		// Determine if the disconnect method was used incorrectly.
-		if (this.semaphore === 0) {
+		if (this._semaphore === 0) {
 			throw new Error('Disconnect invoked before connect.')
 		}
 
 		// Decrement the semaphore.
-		(--this.semaphore)
+		(--this._semaphore)
 
 		// Do nothing if the connect method wasn't called a sufficient number of times.
-		if (this.semaphore > 0) {
+		if (this._semaphore > 0) {
 			return
 		}
 
 		// Perform the actual disconnecting.
-		if (this.instance) {
-			await this.instance.destroy()
+		if (this._instance) {
+			await this._instance.destroy()
 		}
 	}
 
@@ -65,8 +76,8 @@ export class KnexWrapper {
 		}
 
 		// Otherwise if an instance is available use it to create a new transaction.
-		if (this.instance) {
-			return this.instance.transaction(callback)
+		if (this._instance) {
+			return this._instance.transaction(callback)
 		}
 
 		// Otherwise return null.
