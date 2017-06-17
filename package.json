@@ -10,7 +10,7 @@
     "npm": "~3.10.10"
   },
   "scripts": {
-    "preversion": "git checkout . && git checkout master && git pull && npm run validate && npm run clean && npm run build",
+    "preversion": "git checkout . && git checkout master && git pull && npm run clean && npm run validate",
     "postversion": "git push && git push --tags && npm publish",
     "build": "webpack",
     "build:watch": "npm run build -- --watch",
