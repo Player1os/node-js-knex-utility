@@ -69,7 +69,7 @@ export class KnexWrapper {
 	/**
 	 * Ensures that either the passed transaction is used or a new one is created within the provided function.
 	 */
-	async transaction<T>(callback: (trx: Knex.Transaction) => Promise<T>, transaction?: Knex.Transaction): Promise<T> {
+	async transaction<T>(callback: (transaction: Knex.Transaction) => Promise<T>, transaction?: Knex.Transaction): Promise<T> {
 		// If a transaction is provided use it.
 		if (transaction) {
 			return callback(transaction)
