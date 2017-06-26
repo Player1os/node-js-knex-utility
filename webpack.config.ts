@@ -68,7 +68,10 @@ export default {
 	// Specify the target to be the node runtime.
 	target: 'node',
 	// Specify that all standard dependencies should be considered exterals to be dynamically included.
-	externals: Object.keys(packageJson.dependencies || {})
+	externals: [
+		...Object.keys(packageJson.dependencies || {}),
+		...Object.keys(packageJson.peerDependencies || {}),
+	]
 		.reduce((externals, dependencyName) => {
 			externals[dependencyName] = `commonjs ${dependencyName}`
 			return externals
