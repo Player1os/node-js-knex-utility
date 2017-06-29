@@ -2,7 +2,7 @@
 import * as Knex from 'knex'
 
 // Expose the class for the main knex wrapper.
-export class KnexWrapper {
+export class Connection {
 	// Define the knex instance.
 	private _instance: Knex | null = null
 
@@ -12,14 +12,14 @@ export class KnexWrapper {
 	/**
 	 * Retrieves the connected state of the internal instance.
 	 */
-	isConnected(this: KnexWrapper) {
+	isConnected(this: Connection) {
 		return this._instance !== null
 	}
 
 	/**
 	 * Retrieves the internal instance if it is connected. Otherwise throws an error.
 	 */
-	get instance(this: KnexWrapper) {
+	get instance(this: Connection) {
 		if (!this._instance) {
 			throw new Error('The knex instance has not been initialized.')
 		}
@@ -31,7 +31,7 @@ export class KnexWrapper {
 	 * Ensures that either the passed transaction is used or a new one is created within the provided function.
 	 */
 	async transaction<T>(
-		this: KnexWrapper,
+		this: Connection,
 		callback: (transaction: Knex.Transaction) => Promise<T>,
 		transaction?: Knex.Transaction,
 	): Promise<T> {
@@ -48,7 +48,7 @@ export class KnexWrapper {
 	 * Connects to the database through knex.
 	 * @param knexConfig The configutation that can be usually obtained from the knexfile.
 	 */
-	async connect(this: KnexWrapper, knexConfig: Knex.Config) {
+	async connect(this: Connection, knexConfig: Knex.Config) {
 		// Defermine whether a connection has already been established.
 		if (this._semaphore === 0) {
 			// Create the knex instance based on the config.
@@ -62,7 +62,7 @@ export class KnexWrapper {
 	/**
 	 * Disconnects from the database through knex.
 	 */
-	async disconnect(this: KnexWrapper) {
+	async disconnect(this: Connection) {
 		// Determine if the disconnect method was used incorrectly.
 		if (this._semaphore === 0) {
 			throw new Error('Disconnect invoked before connect.')
@@ -84,4 +84,4 @@ export class KnexWrapper {
 }
 
 // Expose an instace of the wrapper.
-export default new KnexWrapper()
+export default new Connection()

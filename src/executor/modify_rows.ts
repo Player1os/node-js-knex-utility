@@ -1,13 +1,16 @@
+// Load app modules.
+import UniqueConstraintViolationError from '.../src/error/unique_constraint_violation'
+
 // Load npm modules.
 import * as Knex from 'knex'
 
 export default async (knexQueryBuilder: Knex.QueryBuilder) => {
 	try {
-		// Execute the prepared query builder.
-		const entities = await knexQueryBuilder
+		// Execute the query builder.
+		const modifiedRows = await knexQueryBuilder as object[]
 
-		// Return the created entities.
-		return entities
+		// Return the modified rows.
+		return modifiedRows
 	} catch (err) {
 		// Attempt to better identify the error.
 		switch (err.code) {

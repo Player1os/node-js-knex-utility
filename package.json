@@ -1,7 +1,7 @@
 {
   "name": "@player1os/knex-wrapper",
   "version": "1.2.6",
-  "description": "A thin promise based wrapper for the knex module that takes care of instance creation and connecting/disconnecting",
+  "description": "A wrapper for the knex module that takes care of connecting/disconnecting, as well as many helper components",
   "private": false,
   "main": "index.js",
   "types": "types/index.d.ts",
@@ -38,6 +38,8 @@
   },
   "homepage": "https://github.com/Player1os/node-js-knex-wrapper#readme",
   "dependencies": {
+    "@player1os/base-error": "^1.0.5",
+    "knex": "^0.13.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
@@ -69,9 +71,6 @@
     "tsutils": "1.6.0",
     "typescript": "^2.3.2",
     "webpack": "^2.5.1"
-  },
-  "peerDependencies": {
-    "knex": "^0.13.0"
   },
   "nyc": {
     "include": [
