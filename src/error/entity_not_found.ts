@@ -2,9 +2,9 @@
 import BaseError from '@player1os/base-error'
 
 // Expose the error class.
-export default class RowNotFoundError extends BaseError {
+export default class EntityNotFoundError extends BaseError {
 	constructor() {
 		// Call parent constructor.
-		super('The query did not return any rows')
+		super('No matching entity was found')
 	}
 }

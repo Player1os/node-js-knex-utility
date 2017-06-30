@@ -2,15 +2,14 @@
 import connection from '.../src/connection'
 
 // Expose the error classes.
-export { default as RowNotFoundError } from '.../src/error/row_not_found'
-export { default as MultipleRowsFoundError } from '.../src/error/multiple_rows_found'
+export { default as EntityNotFoundError } from '.../src/error/entity_not_found'
+export { default as MultipleEntitiesFoundError } from '.../src/error/multiple_entities_found'
 export { default as UniqueConstraintViolationError } from '.../src/error/unique_constraint_violation'
 
 // Expose the executor functions.
-export { default as modifyRowsExecutor } from '.../src/executor/modify_rows'
 export { default as countExecutor } from '.../src/executor/count'
 export { default as existsExecutor } from '.../src/executor/exists'
-export { default as singleExecutor } from '.../src/executor/single'
+export { default as writeExecutor } from '.../src/executor/write'
 
 // Expose the model classes, interfaces and types.
 export {

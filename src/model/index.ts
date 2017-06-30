@@ -43,13 +43,17 @@ export interface IDeleteOptions {
 }
 
 // Expose the base model class.
-export abstract class Model<IInsertInput extends object, IUpdateInput extends object, IFilterItemInput extends object> {
+export class Model<
+	IInsertValues extends object,
+	IUpdateValues extends object,
+	IWhereFilterItem extends object
+> { // tslint:disable-line:one-line
 	/**
 	 * A constructor that confirms that the required properties are present.
 	 * @param tableName The name of the underlying table.
 	 * @param fieldNames The names of the underlying table's fields.
 	 */
-	constructor(
+	public constructor(
 		public readonly tableName: string,
 		public readonly fieldNames: string[],
 	) {
@@ -60,12 +64,34 @@ export abstract class Model<IInsertInput extends object, IUpdateInput extends ob
 	}
 
 	/**
+	 *
+	 * @param this
+	 * @param knexQueryBuilder
+	 * @param column
+	 * @param foreignColumn
+	 * @param tableNameAlias
+	 */
+	public joinQueryModifier(
+		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
+		knexQueryBuilder: Knex.QueryBuilder,
+		column: string,
+		foreignColumn: string,
+		tableNameAlias?: string,
+	) {
+		return knexQueryBuilder.join(
+			(tableNameAlias)
+				? `${this.tableName} as ${tableNameAlias}`
+				: this.tableName,
+			column, foreignColumn)
+	}
+
+	/**
 	 * Prepares a general query upon the table.
 	 * @param this
 	 * @param options
 	 */
-	public queryBuilder(
-		this: Model<IInsertInput, IUpdateInput, IFilterItemInput>,
+	protected queryBuilder(
+		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
 		options: IOptions = {},
 	) {
 		//
@@ -85,14 +111,35 @@ export abstract class Model<IInsertInput extends object, IUpdateInput extends ob
 	}
 
 	/**
+	 *
+	 * @param this
+	 * @param options
+	 */
+	protected returningQueryModifier(
+		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
+		knexQueryBuilder: Knex.QueryBuilder,
+		returningFields?: string[],
+	) {
+		// Optionally enable the returning of created rows.
+		if (!returningFields) {
+			knexQueryBuilder.returning(this.fieldNames)
+		} else if (!lodash.isEmpty(returningFields)) {
+			knexQueryBuilder.returning(returningFields)
+		}
+
+		//
+		return knexQueryBuilder
+	}
+
+	/**
 	 * Create entities of the model using the provided values.
 	 * @param this An instance of the model itself.
 	 * @param values The query that describes the where clause to be built.
 	 * @param options Parameters for the underlying query and validation.
 	 */
-	public insertQueryBuilder(
-		this: Model<IInsertInput, IUpdateInput, IFilterItemInput>,
-		values: IInsertInput | IInsertInput[],
+	protected insertQueryBuilder(
+		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
+		values: IInsertValues[],
 		options: IInsertOptions = {},
 	) {
 		// Prepare an insertion query builder.
@@ -111,9 +158,9 @@ export abstract class Model<IInsertInput extends object, IUpdateInput extends ob
 	 * @param filterExpression The query that describes the where clause to be built.
 	 * @param options Parameters for the underlying query and validation.
 	 */
-	public selectQueryBuilder(
-		this: Model<IInsertInput, IUpdateInput, IFilterItemInput>,
-		filterExpression: IFilterItemInput | IFilterItemInput[],
+	protected selectQueryBuilder(
+		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
+		filterExpression: IWhereFilterItem | IWhereFilterItem[],
 		options: ISelectOptions = {},
 	) {
 		// Prepare an insertion query builder.
@@ -158,10 +205,10 @@ export abstract class Model<IInsertInput extends object, IUpdateInput extends ob
 	 * @param values
 	 * @param options Parameters for the underlying query and validation.
 	 */
-	public updateQueryBuilder(
-		this: Model<IInsertInput, IUpdateInput, IFilterItemInput>,
-		filterExpression: IFilterItemInput | IFilterItemInput[],
-		values: IUpdateInput,
+	protected updateQueryBuilder(
+		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
+		filterExpression: IWhereFilterItem | IWhereFilterItem[],
+		values: IUpdateValues,
 		options: IUpdateOptions,
 	) {
 		// Prepare an update query builder.
@@ -183,9 +230,9 @@ export abstract class Model<IInsertInput extends object, IUpdateInput extends ob
 	 * @param query The query that describes the where clause to be built.
 	 * @param options Parameters for the underlying query and validation.
 	 */
-	public deleteQueryBuilder(
-		this: Model<IInsertInput, IUpdateInput, IFilterItemInput>,
-		filterExpression: IFilterItemInput | IFilterItemInput[],
+	protected deleteQueryBuilder(
+		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
+		filterExpression: IWhereFilterItem | IWhereFilterItem[],
 		options: IDeleteOptions = {},
 	) {
 		// Prepare an update query builder.
@@ -199,48 +246,5 @@ export abstract class Model<IInsertInput extends object, IUpdateInput extends ob
 
 		// Return the prepared query builder.
 		return queryBuilder.delete()
-	}
-
-	/**
-	 *
-	 * @param this
-	 * @param knexQueryBuilder
-	 * @param column
-	 * @param foreignColumn
-	 * @param tableNameAlias
-	 */
-	public joinQueryModifier(
-		this: Model<IInsertInput, IUpdateInput, IFilterItemInput>,
-		knexQueryBuilder: Knex.QueryBuilder,
-		column: string,
-		foreignColumn: string,
-		tableNameAlias?: string,
-	) {
-		return knexQueryBuilder.join(
-			(tableNameAlias)
-				? `${this.tableName} as ${tableNameAlias}`
-				: this.tableName,
-			column, foreignColumn)
-	}
-
-	/**
-	 *
-	 * @param this
-	 * @param options
-	 */
-	protected returningQueryModifier(
-		this: Model<IInsertInput, IUpdateInput, IFilterItemInput>,
-		knexQueryBuilder: Knex.QueryBuilder,
-		returningFields?: string[],
-	) {
-		// Optionally enable the returning of created rows.
-		if (!returningFields) {
-			knexQueryBuilder.returning(this.fieldNames)
-		} else if (!lodash.isEmpty(returningFields)) {
-			knexQueryBuilder.returning(returningFields)
-		}
-
-		//
-		return knexQueryBuilder
 	}
 }
