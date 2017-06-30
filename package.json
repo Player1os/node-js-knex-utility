@@ -1,6 +1,6 @@
 {
   "name": "@player1os/knex-wrapper",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "A wrapper for the knex module that takes care of connecting/disconnecting, as well as many helper components",
   "private": false,
   "main": "index.js",
