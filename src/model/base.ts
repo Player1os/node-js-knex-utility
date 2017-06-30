@@ -32,7 +32,7 @@ export interface IDestroyOptions extends IDeleteOptions {
 	isValidationDisabled?: boolean,
 }
 
-// Expose the base crud trait class.
+// Expose the base model class.
 export abstract class BaseModel<
 	IEntity extends object,
 	ICreateValues extends object,
@@ -48,9 +48,9 @@ export abstract class BaseModel<
 > {
 	/**
 	 *
-	 * @param this
+	 * @param this An instance of the BaseModel class.
 	 * @param values
-	 * @param options
+	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public abstract async create(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -60,9 +60,9 @@ export abstract class BaseModel<
 
 	/**
 	 *
-	 * @param this
+	 * @param this An instance of the BaseModel class.
 	 * @param values
-	 * @param options
+	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public async createOne(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -81,9 +81,9 @@ export abstract class BaseModel<
 
 	/**
 	 *
-	 * @param this
+	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression
-	 * @param options
+	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public abstract async find(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -93,9 +93,9 @@ export abstract class BaseModel<
 
 	/**
 	 *
-	 * @param this
+	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression
-	 * @param options
+	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public async findOne(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -114,9 +114,9 @@ export abstract class BaseModel<
 
 	/**
 	 * Find the count of all entities of the model matching the query.
-	 * @param this An instance of the model itself.
-	 * @param query The query that describes the where clause to be built.
-	 * @param options Parameters for the underlying query and validation.
+	 * @param this An instance of the BaseModel class.
+	 * @param filterExpression The query that describes the where clause to be built.
+	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public abstract async count(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -126,9 +126,9 @@ export abstract class BaseModel<
 
 	/**
 	 *
-	 * @param this
+	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression
-	 * @param options
+	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public abstract async exists(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -138,9 +138,9 @@ export abstract class BaseModel<
 
 	/**
 	 *
-	 * @param this An instance of the model itself.
+	 * @param this An instance of the BaseModel class.
 	 * @param values
-	 * @param options Parameters for the underlying query and validation.
+	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public abstract async modify(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -151,10 +151,10 @@ export abstract class BaseModel<
 
 	/**
 	 * Update a single entity of the model matching the query with the supplied values.
-	 * @param this An instance of the model itself.
+	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression The query that describes the where clause to be built.
 	 * @param values
-	 * @param options Parameters for the underlying query and validation.
+	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public async modifyOne(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -174,9 +174,9 @@ export abstract class BaseModel<
 
 	/**
 	 *
-	 * @param this An instance of the model itself.
+	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression
-	 * @param options Parameters for the underlying query and validation.
+	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public abstract async destroy(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -186,9 +186,9 @@ export abstract class BaseModel<
 
 	/**
 	 * Destroy a single entity of the model matching the query.
-	 * @param this An instance of the model itself.
+	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression The query that describes the where clause to be built.
-	 * @param options Parameters for the underlying query and validation.
+	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public async destroyOne(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -207,7 +207,7 @@ export abstract class BaseModel<
 
 	/**
 	 *
-	 * @param this
+	 * @param this An instance of the BaseModel class.
 	 * @param entities
 	 */
 	private _retireveOne(

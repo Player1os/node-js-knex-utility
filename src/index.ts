@@ -1,5 +1,8 @@
 // Load app modules.
-import connection from '.../src/connection'
+import {
+	Connection,
+	default as connection,
+} from '.../src/connection'
 
 // Expose the error classes.
 export { default as EntityNotFoundError } from '.../src/error/entity_not_found'
@@ -19,6 +22,22 @@ export {
 	IDeleteOptions,
 	Model,
 } from '.../src/model'
+export {
+	BaseModel,
+	ICreateOptions,
+	ICountOptions,
+	IDestroyOptions,
+	IExistsOptions,
+	IFindOptions,
+	IModifyOptions,
+} from '.../src/model/base'
+export {
+	IKeyEntity,
+	IKeyFilterItem,
+	KeyModel,
+	TKey,
+	TKeyArray,
+} from '.../src/model/key'
 
 // Expose the query modifier functions.
 export { default as filerExpressionQueryModifier } from '.../src/modifier/query/filter_expression'
@@ -28,5 +47,5 @@ export { default as filerExpressionItemQueryModifier } from '.../src/modifier/qu
 export { default as alterColumnSchemaModifier } from '.../src/modifier/schema/alter_column'
 
 // Expose the connection class and instance.
-export { Connection } from '.../src/connection'
+export { Connection }
 export default connection

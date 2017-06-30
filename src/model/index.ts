@@ -49,7 +49,7 @@ export class Model<
 	IWhereFilterItem extends object
 > { // tslint:disable-line:one-line
 	/**
-	 * A constructor that confirms that the required properties are present.
+	 * Creates an instance of the model and confirms the presence and validity of the supplied parameters.
 	 * @param tableName The name of the underlying table.
 	 * @param fieldNames The names of the underlying table's fields.
 	 */
@@ -65,7 +65,7 @@ export class Model<
 
 	/**
 	 *
-	 * @param this
+	 * @param this An instance of the Model class.
 	 * @param knexQueryBuilder
 	 * @param column
 	 * @param foreignColumn
@@ -86,9 +86,9 @@ export class Model<
 	}
 
 	/**
-	 * Prepares a general query upon the table.
-	 * @param this
-	 * @param options
+	 * Creates a general query builder upon the model's table.
+	 * @param this An instance of the Model class.
+	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected queryBuilder(
 		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -112,8 +112,8 @@ export class Model<
 
 	/**
 	 *
-	 * @param this
-	 * @param options
+	 * @param this An instance of the Model class.
+	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected returningQueryModifier(
 		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -127,15 +127,15 @@ export class Model<
 			knexQueryBuilder.returning(returningFields)
 		}
 
-		//
+		// Return the modified query builder.
 		return knexQueryBuilder
 	}
 
 	/**
 	 * Create entities of the model using the provided values.
-	 * @param this An instance of the model itself.
+	 * @param this An instance of the Model class.
 	 * @param values The query that describes the where clause to be built.
-	 * @param options Parameters for the underlying query and validation.
+	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected insertQueryBuilder(
 		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -154,9 +154,9 @@ export class Model<
 
 	/**
 	 * Find all entities of the model matching the query.
-	 * @param this An instance of the model itself.
+	 * @param this An instance of the Model class.
 	 * @param filterExpression The query that describes the where clause to be built.
-	 * @param options Parameters for the underlying query and validation.
+	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected selectQueryBuilder(
 		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -200,10 +200,10 @@ export class Model<
 
 	/**
 	 * Update all entities of the model matching the query with the supplied values.
-	 * @param this An instance of the model itself.
-	 * @param query
+	 * @param this An instance of the Model class.
+	 * @param filterExpression
 	 * @param values
-	 * @param options Parameters for the underlying query and validation.
+	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected updateQueryBuilder(
 		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -226,8 +226,8 @@ export class Model<
 
 	/**
 	 * Destroy all entities of the model matching the query.
-	 * @param this An instance of the model itself.
-	 * @param query The query that describes the where clause to be built.
+	 * @param this An instance of the Model class.
+	 * @param filterExpression The query that describes the where clause to be built.
 	 * @param options Parameters for the underlying query and validation.
 	 */
 	protected deleteQueryBuilder(

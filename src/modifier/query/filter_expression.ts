@@ -6,22 +6,24 @@ import * as Knex from 'knex'
 import * as lodash from 'lodash'
 
 /**
- * Prepare a pluggable knex query based on the query parameters.
- * @param this An instance of the model itself.
- * @param query The query that describes the where clause to be built.
+ * Modify the knex query builder to filter its result based on the supplied disjuncted filter expression.
+ * @param knexQueryBuilder An knex query builder to be modified.
+ * @param filterExpression A disjuncted filter expression of conjucted items.
  */
 export default (knexQueryBuilder: Knex.QueryBuilder, filterExpression: object | object[]) => {
-	// Add filters using the submitted query.
+	// Determine whether the filter expression is singular conjuction or contains mutiple conjunction filter items.
 	if (lodash.isArray(filterExpression)) {
+		// Process each of the filter items as a disjunction of conjucted expressions.
 		filterExpression.forEach((queryItem) => {
 			knexQueryBuilder.orWhere((whereQuery) => {
 				filterExpressionItemQueryModifier(whereQuery, queryItem)
 			})
 		})
 	} else {
+		// Process the singular filter item as a conjucted expression.
 		filterExpressionItemQueryModifier(knexQueryBuilder, filterExpression)
 	}
 
-	// Return the prepared query builder.
+	// Return the modified query builder.
 	return knexQueryBuilder
 }

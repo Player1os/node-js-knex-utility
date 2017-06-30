@@ -2,9 +2,9 @@
 import * as Knex from 'knex'
 
 /**
- * Define and expose a helper function for altering columns within a schema.
- * @param columnBuilder The knex expression defining the column to be altered.
+ * Modify a knex column builder to alter the column it describes within the schema.
+ * @param knexColumnBuilder A knex column builder defining the column to be altered.
  */
-export default (columnBuilder: Knex.ColumnBuilder): Knex.ColumnBuilder => {
-	return (columnBuilder as any).alter()
+export default (knexColumnBuilder: Knex.ColumnBuilder): Knex.ColumnBuilder => {
+	return (knexColumnBuilder as any).alter()
 }

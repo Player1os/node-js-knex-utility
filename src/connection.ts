@@ -1,25 +1,26 @@
 // Load npm modules.
 import * as Knex from 'knex'
 
-// Expose the class for the main knex wrapper.
+/**
+ * A class that encapsulates the knex instance allowing for its use as a singleton instance accross the application.
+ * The class also defines methods for connecting and disconnecting to the underlying database and creating transactions.
+ */
 export class Connection {
-	// Define the knex instance.
+	/**
+	 * The internal knex instance.
+	 */
 	private _instance: Knex | null = null
 
-	// Define the connection semaphore.
+	/**
+	 * The internal connection semaphore, that determines whether the connected state should be changed.
+	 */
 	private _semaphore = 0
 
 	/**
-	 * Retrieves the connected state of the internal instance.
-	 */
-	isConnected(this: Connection) {
-		return this._instance !== null
-	}
-
-	/**
 	 * Retrieves the internal instance if it is connected. Otherwise throws an error.
+	 * @param this An instance of the Connecntion class.
 	 */
-	get instance(this: Connection) {
+	public get instance(this: Connection) {
 		if (!this._instance) {
 			throw new Error('The knex instance has not been initialized.')
 		}
@@ -29,8 +30,9 @@ export class Connection {
 
 	/**
 	 * Ensures that either the passed transaction is used or a new one is created within the provided function.
+	 * @param this An instance of the Connecntion class.
 	 */
-	async transaction<T>(
+	public async transaction<T>(
 		this: Connection,
 		callback: (transaction: Knex.Transaction) => Promise<T>,
 		transaction?: Knex.Transaction,
@@ -45,10 +47,19 @@ export class Connection {
 	}
 
 	/**
-	 * Connects to the database through knex.
-	 * @param knexConfig The configutation that can be usually obtained from the knexfile.
+	 * Retrieves the connected state of the internal knex instance.
+	 * @param this An instance of the Connecntion class.
 	 */
-	async connect(this: Connection, knexConfig: Knex.Config) {
+	public isConnected(this: Connection) {
+		return this._instance !== null
+	}
+
+	/**
+	 * Initializes a connection to the database if none exists, and creates the internal knex instance.
+	 * @param this An instance of the Connecntion class.
+	 * @param knexConfig A knex configuration object that can be usually obtained from the project's knexfile.
+	 */
+	public async connect(this: Connection, knexConfig: Knex.Config) {
 		// Defermine whether a connection has already been established.
 		if (this._semaphore === 0) {
 			// Create the knex instance based on the config.
@@ -60,9 +71,10 @@ export class Connection {
 	}
 
 	/**
-	 * Disconnects from the database through knex.
+	 * Terminates the existing connection to the database, and destroyes the internal knex instance.
+	 * @param this An instance of the Connecntion class.
 	 */
-	async disconnect(this: Connection) {
+	public async disconnect(this: Connection) {
 		// Determine if the disconnect method was used incorrectly.
 		if (this._semaphore === 0) {
 			throw new Error('Disconnect invoked before connect.')
@@ -83,5 +95,5 @@ export class Connection {
 	}
 }
 
-// Expose an instace of the wrapper.
+// Expose an instace of the Connection class that can be used as a singleton.
 export default new Connection()
