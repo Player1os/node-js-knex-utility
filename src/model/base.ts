@@ -146,7 +146,7 @@ export abstract class BaseModel<
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		filterExpression: IFilterItem | IFilterItem[],
 		values: IModifyValues,
-		options: IUpdateOptions,
+		options: IModifyOptions,
 	): Promise<IEntity[]>
 
 	/**
@@ -160,7 +160,7 @@ export abstract class BaseModel<
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		filterExpression: IFilterItem | IFilterItem[],
 		values: IModifyValues,
-		options: IUpdateOptions = {},
+		options: IModifyOptions = {},
 	) {
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
 		return connection.transaction(async (transaction) => {
