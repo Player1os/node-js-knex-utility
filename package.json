@@ -1,6 +1,6 @@
 {
   "name": "@player1os/knex-utility",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A utility for the knex module that takes care of connecting/disconnecting, as well as many helper components",
   "private": false,
   "main": "index.js",
