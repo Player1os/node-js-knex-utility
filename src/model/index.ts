@@ -1,5 +1,6 @@
 // Load app modules.
 import connection from '.../src/connection'
+import EmptyValuesError from '.../src/error/empty_values'
 import filterExpressionQueryModifier from '.../src/modifier/query/filter_expression'
 
 // Load npm modules.
@@ -64,12 +65,12 @@ export class Model<
 	}
 
 	/**
-	 *
+	 * Modifies the query builder to add a join clause upon the model's table.
 	 * @param this An instance of the Model class.
-	 * @param knexQueryBuilder
-	 * @param column
-	 * @param foreignColumn
-	 * @param tableNameAlias
+	 * @param knexQueryBuilder A query builder to be modified.
+	 * @param column The name of the table's column to be matched in the join expression.
+	 * @param foreignColumn The name of the foreign column to be matched in the join expression.
+	 * @param tableNameAlias An optional alias of the model's table to be joined.
 	 */
 	public joinQueryModifier(
 		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -94,7 +95,7 @@ export class Model<
 		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
 		options: IOptions = {},
 	) {
-		//
+		// Initialize the query builder, may optionally contain an alias for the model's table.
 		const knexQueryBuilder = connection.instance(
 			(options.tableNameAlias)
 			? `${this.tableName} as ${options.tableNameAlias}`
@@ -111,7 +112,7 @@ export class Model<
 	}
 
 	/**
-	 *
+	 * Modifies the query builder by adding a returning clause. Allows the specification of the individual fields to be returned.
 	 * @param this An instance of the Model class.
 	 * @param options A set of options that determine how the query should be executed.
 	 */
@@ -132,17 +133,29 @@ export class Model<
 	}
 
 	/**
-	 * Create entities of the model using the provided values.
+	 * Prepare an insert qeury upon the model's table, using the provided values.
 	 * @param this An instance of the Model class.
-	 * @param values The query that describes the where clause to be built.
+	 * @param values An array of values to be inserted.
 	 * @param options A set of options that determine how the query should be executed.
+	 * @throws EmptyValuesError.
 	 */
 	protected insertQueryBuilder(
 		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
 		values: IInsertValues[],
 		options: IInsertOptions = {},
 	) {
-		// Prepare an insertion query builder.
+		// Verify that the submitted values are not empty.
+		if (lodash.isEmpty(values)) {
+			throw new EmptyValuesError()
+		} else {
+			values.forEach((valuesEntry) => {
+				if (lodash.isEmpty(valuesEntry)) {
+					throw new EmptyValuesError()
+				}
+			})
+		}
+
+		// Prepare a query builder.
 		const queryBuilder = this.queryBuilder(options)
 
 		// Apply the returning query modifier.
@@ -153,9 +166,9 @@ export class Model<
 	}
 
 	/**
-	 * Find all entities of the model matching the query.
+	 * Prepare a select query upon the model's table, using the filter expression.
 	 * @param this An instance of the Model class.
-	 * @param filterExpression The query that describes the where clause to be built.
+	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected selectQueryBuilder(
@@ -163,10 +176,10 @@ export class Model<
 		filterExpression: IWhereFilterItem | IWhereFilterItem[],
 		options: ISelectOptions = {},
 	) {
-		// Prepare an insertion query builder.
+		// Prepare a query builder.
 		const queryBuilder = this.queryBuilder(options)
 
-		// Optionally use the supplied field name aliases to determine the select clause.
+		// Optionally use the supplied field name aliases to fill the select clause.
 		queryBuilder.select(
 			(options.fieldNameAliases)
 				? lodash.map(options.fieldNameAliases, (fieldName, fieldAlias) => {
@@ -199,11 +212,12 @@ export class Model<
 	}
 
 	/**
-	 * Update all entities of the model matching the query with the supplied values.
+	 * Prepare an update query builder upon the model's table, using the filter expression and values.
 	 * @param this An instance of the Model class.
-	 * @param filterExpression
-	 * @param values
+	 * @param filterExpression A filter expression used to build the query and specify the results.
+	 * @param values Values to be set and updated.
 	 * @param options A set of options that determine how the query should be executed.
+	 * @throws EmptyValuesError.
 	 */
 	protected updateQueryBuilder(
 		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -211,6 +225,11 @@ export class Model<
 		values: IUpdateValues,
 		options: IUpdateOptions,
 	) {
+		// Verify that the submitted values are not empty.
+		if (lodash.isEmpty(values)) {
+			throw new EmptyValuesError()
+		}
+
 		// Prepare an update query builder.
 		const queryBuilder = this.queryBuilder(options)
 
@@ -225,9 +244,9 @@ export class Model<
 	}
 
 	/**
-	 * Destroy all entities of the model matching the query.
+	 * Prepare a delete query builder upon the model's table, using the filter expression.
 	 * @param this An instance of the Model class.
-	 * @param filterExpression The query that describes the where clause to be built.
+	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options Parameters for the underlying query and validation.
 	 */
 	protected deleteQueryBuilder(

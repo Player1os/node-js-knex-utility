@@ -60,8 +60,9 @@ export abstract class KeyModel<
 	 * Find a single entity of the model with the supplied key.
 	 * This method internally calls the findOne method.
 	 * @param this An instance of the KeyModel class.
-	 * @param key A value that will be matched agains the primary key of all entities in the underlying database.
+	 * @param key A value that will be matched against the primary key of all entities in the underlying database.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws EntityNotFoundError.
 	 */
 	public async findByKey(
 		this: KeyModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -75,9 +76,10 @@ export abstract class KeyModel<
 	/**
 	 * Modify a single entity of the model with a matching primary key using the supplied values.
 	 * @param this An instance of the KeyModel class.
-	 * @param key A value that will be matched agains the primary key of all entities in the underlying database.
+	 * @param key A value that will be matched against the primary key of all entities in the underlying database.
 	 * @param values Field values to be set on the matching entity.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws EntityNotFoundError.
 	 */
 	public async modifyByKey(
 		this: KeyModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -94,6 +96,7 @@ export abstract class KeyModel<
 	 * @param this An instance of the KeyModel class.
 	 * @param entity An entity previously retrieved from the underlying database.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws EntityNotFoundError.
 	 */
 	public async modifyEntity(
 		this: KeyModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -107,8 +110,9 @@ export abstract class KeyModel<
 	/**
 	 * Destroy a single entity of the model with a matching primary key.
 	 * @param this An instance of the KeyModel class.
-	 * @param key A value that will be matched agains the primary key of all entities in the underlying database.
+	 * @param key A value that will be matched against the primary key of all entities in the underlying database.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws EntityNotFoundError.
 	 */
 	public async destroyByKey(
 		this: KeyModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -124,6 +128,7 @@ export abstract class KeyModel<
 	 * @param this An instance of the KeyModel class.
 	 * @param entity An entity previously retrieved from the underlying database.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws EntityNotFoundError.
 	 */
 	public async destroyEntity(
 		this: KeyModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,

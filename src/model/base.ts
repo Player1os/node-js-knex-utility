@@ -47,10 +47,11 @@ export abstract class BaseModel<
 	IWhereFilterItem
 > {
 	/**
-	 *
+	 * Create multiple entities of the model, using the provided array of values.
 	 * @param this An instance of the BaseModel class.
-	 * @param values
+	 * @param values An array of values used to create the entities.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws UniqueConstraintViolationError.
 	 */
 	public abstract async create(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -59,10 +60,12 @@ export abstract class BaseModel<
 	): Promise<IEntity[]>
 
 	/**
-	 *
+	 * Create a single entity of the model, using the provided values.
+	 * If none or more than one entity is created, an error is thrown.
 	 * @param this An instance of the BaseModel class.
-	 * @param values
+	 * @param values Values used to create the entity.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws EntityNotFoundError, MultipleEntitiesFoundError, UniqueConstraintViolationError.
 	 */
 	public async createOne(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -80,9 +83,10 @@ export abstract class BaseModel<
 	}
 
 	/**
-	 *
+	 * Find multiple entities of the model, matching the provided filter expression.
+	 * If none or more than one entity is found, an error is thrown.
 	 * @param this An instance of the BaseModel class.
-	 * @param filterExpression
+	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public abstract async find(
@@ -92,10 +96,11 @@ export abstract class BaseModel<
 	): Promise<IEntity[]>
 
 	/**
-	 *
+	 * Find a single entity of the model, matching the provided filter expression.
 	 * @param this An instance of the BaseModel class.
-	 * @param filterExpression
+	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws EntityNotFoundError, MultipleEntitiesFoundError.
 	 */
 	public async findOne(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
@@ -113,7 +118,7 @@ export abstract class BaseModel<
 	}
 
 	/**
-	 * Find the count of all entities of the model matching the query.
+	 * Find the count of all entities of the model, matching the submitted filter expression.
 	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression The query that describes the where clause to be built.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
@@ -125,9 +130,9 @@ export abstract class BaseModel<
 	): Promise<number>
 
 	/**
-	 *
+	 * Find whether at least one entity of the model exists, which matches the submitted filter expression.
 	 * @param this An instance of the BaseModel class.
-	 * @param filterExpression
+	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public abstract async exists(
@@ -137,9 +142,10 @@ export abstract class BaseModel<
 	): Promise<boolean>
 
 	/**
-	 *
+	 * Modify multiple entities of the model, matching the submitted filter expression, with the supplied values.
 	 * @param this An instance of the BaseModel class.
-	 * @param values
+	 * @param filterExpression A filter expression used to build the query and specify the results.
+	 * @param values Values used to modify the matching entities.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public abstract async modify(
@@ -150,10 +156,10 @@ export abstract class BaseModel<
 	): Promise<IEntity[]>
 
 	/**
-	 * Update a single entity of the model matching the query with the supplied values.
+	 * Modify a single entity of the model, matching the submitted filter expression, with the supplied values.
 	 * @param this An instance of the BaseModel class.
-	 * @param filterExpression The query that describes the where clause to be built.
-	 * @param values
+	 * @param filterExpression A filter expression used to build the query and specify the results.
+	 * @param values Values used to modify the matching entity.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public async modifyOne(
@@ -173,9 +179,9 @@ export abstract class BaseModel<
 	}
 
 	/**
-	 *
+	 * Destroy multiple entities of the model, matching the submitted filter expression.
 	 * @param this An instance of the BaseModel class.
-	 * @param filterExpression
+	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public abstract async destroy(
@@ -185,9 +191,9 @@ export abstract class BaseModel<
 	): Promise<IEntity[]>
 
 	/**
-	 * Destroy a single entity of the model matching the query.
+	 * Destroy a single entity of the model, matching the submitted filter expression.
 	 * @param this An instance of the BaseModel class.
-	 * @param filterExpression The query that describes the where clause to be built.
+	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public async destroyOne(
@@ -206,9 +212,11 @@ export abstract class BaseModel<
 	}
 
 	/**
-	 *
+	 * Retrieves the first entity from a collection of returned entities.
+	 * Verifies whether the entity exists and whether mutliple entities are contained in the collection.
 	 * @param this An instance of the BaseModel class.
-	 * @param entities
+	 * @param entities Entities retrived by the execution of a query with results.
+	 * @throws EntityNotFoundError, MultipleEntitiesFoundError.
 	 */
 	private _retireveOne(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
