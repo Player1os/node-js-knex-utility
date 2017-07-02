@@ -8,6 +8,7 @@ test/
 .gitattributes
 .gitignore
 .node-version
+README.md
 tsconfig.json
 tslint.json
 webpack.config.ts
