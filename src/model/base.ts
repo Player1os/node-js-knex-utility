@@ -224,12 +224,12 @@ export abstract class BaseModel<
 	) {
 		// Check if at least one entity is given.
 		if (entities.length === 0) {
-			throw new EntityNotFoundError()
+			throw new EntityNotFoundError(this.tableName)
 		}
 
 		// Check if more than one entity is given.
 		if (entities.length > 1) {
-			throw new MultipleEntitiesFoundError()
+			throw new MultipleEntitiesFoundError(this.tableName)
 		}
 
 		// Return the first entity.

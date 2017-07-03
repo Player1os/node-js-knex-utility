@@ -8,16 +8,18 @@ export interface IKnexError extends Error {
 	constraint: string,
 }
 
+export interface IErrorItem {
+	input: string,
+	type: 'any.db_unique_constraint',
+	message: string,
+}
+
 // Expose the error class.
 export default class UniqueConstraintViolationError extends BaseError {
 	public readonly fields: string
 	public readonly values: string
-	public readonly detail: {
-		[field: string]: {
-			input: string,
-			type: 'any.db_unique_constraint',
-			message: string,
-		},
+	public readonly details: {
+		readonly [field: string]: IErrorItem,
 	}
 
 	constructor(knexError: IKnexError) {
@@ -37,7 +39,7 @@ export default class UniqueConstraintViolationError extends BaseError {
 		// Generate the details property.
 		const fields = fieldsString.split(', ')
 		const values = valuesString.split(', ')
-		this.detail = fields.reduce((accumulator, field) => {
+		this.details = fields.reduce((accumulator, field) => {
 			accumulator[field] = {
 				input: valuesString,
 				type: 'any.db_unique_constraint',
