@@ -70,7 +70,7 @@ export abstract class BaseModel<
 	public async createOne(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		values: ICreateValues,
-		options: ICreateOptions,
+		options: ICreateOptions = {},
 	) {
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
 		return connection.transaction(async (transaction) => {
