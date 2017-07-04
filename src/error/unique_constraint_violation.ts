@@ -9,7 +9,7 @@ export interface IKnexError extends Error {
 }
 
 export interface IErrorItem {
-	input: string,
+	value: string,
 	type: 'any.db_unique_constraint',
 	message: string,
 }
@@ -42,7 +42,7 @@ export default class UniqueConstraintViolationError extends BaseError {
 		this.details = fields.reduce((accumulator, field) => {
 			// Parse the error item.
 			const errorItem = {
-				input: valuesString,
+				value: valuesString,
 				type: 'any.db_unique_constraint',
 				message: `The constraint "${knexError.table}"."${knexError.constraint}" has been violated, while attempting to`
 					+ ` set the (${valuesString}) value${(values.length > 1) ? 's' : ''}`
