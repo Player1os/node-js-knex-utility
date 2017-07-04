@@ -19,7 +19,7 @@ export default class UniqueConstraintViolationError extends BaseError {
 	public readonly fields: string
 	public readonly values: string
 	public readonly details: {
-		readonly [field: string]: IErrorItem,
+		readonly [field: string]: IErrorItem[],
 	}
 
 	constructor(knexError: IKnexError) {
@@ -40,13 +40,22 @@ export default class UniqueConstraintViolationError extends BaseError {
 		const fields = fieldsString.split(', ')
 		const values = valuesString.split(', ')
 		this.details = fields.reduce((accumulator, field) => {
-			accumulator[field] = {
+			// Parse the error item.
+			const errorItem = {
 				input: valuesString,
 				type: 'any.db_unique_constraint',
 				message: `The constraint "${knexError.table}"."${knexError.constraint}" has been violated, while attempting to`
 					+ ` set the (${valuesString}) value${(values.length > 1) ? 's' : ''}`
 					+ ` in the (${fieldsString}) field${(fields.length > 1) ? 's' : ''}.`,
 			}
+
+			// Add to the array of error items for the given path.
+			if (!(field in accumulator)) {
+				accumulator[field] = []
+			}
+			accumulator[field].push(errorItem)
+
+			// Return the accumulated error items.
 			return accumulator
 		}, {})
 	}
