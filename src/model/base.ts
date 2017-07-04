@@ -78,7 +78,7 @@ export abstract class BaseModel<
 			const entities = await this.create([values], Object.assign({}, options, { transaction }))
 
 			// Return the created entity.
-			return this._retireveOne(entities)
+			return this._retrieveOne(entities)
 		}, options.transaction)
 	}
 
@@ -113,7 +113,7 @@ export abstract class BaseModel<
 			const entities = await this.find(filterExpression, Object.assign({}, options, { transaction }))
 
 			// Return the created entity.
-			return this._retireveOne(entities)
+			return this._retrieveOne(entities)
 		}, options.transaction)
 	}
 
@@ -174,7 +174,7 @@ export abstract class BaseModel<
 			const entities = await this.modify(filterExpression, values, Object.assign({}, options, { transaction }))
 
 			// Return the updated entity.
-			return this._retireveOne(entities)
+			return this._retrieveOne(entities)
 		}, options.transaction)
 	}
 
@@ -207,7 +207,7 @@ export abstract class BaseModel<
 			const entities = await this.destroy(filterExpression, Object.assign({}, options, { transaction }))
 
 			// Return the destroyed entity.
-			return this._retireveOne(entities)
+			return this._retrieveOne(entities)
 		}, options.transaction)
 	}
 
@@ -218,7 +218,7 @@ export abstract class BaseModel<
 	 * @param entities Entities retrived by the execution of a query with results.
 	 * @throws EntityNotFoundError, MultipleEntitiesFoundError.
 	 */
-	private _retireveOne(
+	private _retrieveOne(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		entities: IEntity[],
 	) {
