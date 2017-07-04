@@ -2,7 +2,7 @@
 import {
 	IKeyEntity,
 	IKeyFilterItem,
-	KeyModel
+	KeyModel,
 } from '.../src/model/key'
 
 /**
