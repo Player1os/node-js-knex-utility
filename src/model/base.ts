@@ -2,6 +2,9 @@
 import connection from '.../src/connection'
 import EntityNotFoundError from '.../src/error/entity_not_found'
 import MultipleEntitiesFoundError from '.../src/error/multiple_entities_found'
+import countExecutor from '.../src/executor/count'
+import existsExecutor from '.../src/executor/exists'
+import writeExecutor from '.../src/executor/write'
 import {
 	IDeleteOptions,
 	IInsertOptions,
@@ -48,16 +51,31 @@ export abstract class BaseModel<
 > {
 	/**
 	 * Create multiple entities of the model, using the provided array of values.
+	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
 	 * @param this An instance of the BaseModel class.
 	 * @param values An array of values used to create the entities.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
-	 * @throws UniqueConstraintViolationError.
+	 * @throws UniqueConstraintViolationError, ValidationError.
 	 */
-	public abstract async create(
+	public async create(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		values: ICreateValues[],
-		options: ICreateOptions,
-	): Promise<IEntity[]>
+		options: ICreateOptions = {},
+	) {
+		// Optionally validate the submitted create values.
+		if (!options.isValidationDisabled) {
+			this._validateCreateValues(values)
+		}
+
+		// Prepare the query builder for the insert operation.
+		const queryBuilder = this.insertQueryBuilder((values as any) as IInsertValues[], options)
+
+		// Execute the prepared query builder.
+		const entities = await writeExecutor(queryBuilder) as IEntity[]
+
+		// Return the created entities.
+		return entities
+	}
 
 	/**
 	 * Create a single entity of the model, using the provided values.
@@ -85,15 +103,31 @@ export abstract class BaseModel<
 	/**
 	 * Find multiple entities of the model, matching the provided filter expression.
 	 * If none or more than one entity is found, an error is thrown.
+	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
 	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws ValidationError.
 	 */
-	public abstract async find(
+	public async find(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		filterExpression: IFilterItem | IFilterItem[],
-		options: IFindOptions,
-	): Promise<IEntity[]>
+		options: IFindOptions = {},
+	) {
+		// Optionally validate the submitted filter expression.
+		if (!options.isValidationDisabled) {
+			this._validateFilterExpression(filterExpression)
+		}
+
+		// Prepare the query builder for the select operation.
+		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
+
+		// Execute the prepared query builder.
+		const entities = await queryBuilder as IEntity[]
+
+		// Return the found entities.
+		return entities
+	}
 
 	/**
 	 * Find a single entity of the model, matching the provided filter expression.
@@ -119,41 +153,96 @@ export abstract class BaseModel<
 
 	/**
 	 * Find the count of all entities of the model, matching the submitted filter expression.
+	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
 	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression The query that describes the where clause to be built.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws ValidationError.
 	 */
-	public abstract async count(
+	public async count(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		filterExpression: IFilterItem | IFilterItem[],
-		options: ICountOptions,
-	): Promise<number>
+		options: ICountOptions = {},
+	) {
+		// Optionally validate the submitted filter expression.
+		if (!options.isValidationDisabled) {
+			this._validateFilterExpression(filterExpression)
+		}
+
+		// Prepare the query builder for the select operation.
+		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
+
+		// Execute the prepared query.
+		const count = await countExecutor(queryBuilder)
+
+		// Return the count result.
+		return count
+	}
 
 	/**
 	 * Find whether at least one entity of the model exists, which matches the submitted filter expression.
+	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
 	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws ValidationError.
 	 */
-	public abstract async exists(
+	public async exists(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		filterExpression: IFilterItem | IFilterItem[],
-		options: IExistsOptions,
-	): Promise<boolean>
+		options: IExistsOptions = {},
+	) {
+		// Optionally validate the submitted filter expression.
+		if (!options.isValidationDisabled) {
+			this._validateFilterExpression(filterExpression)
+		}
+
+		// Prepare the query builder for the select operation.
+		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
+
+		// Execute the prepared query.
+		const exists = await existsExecutor(queryBuilder)
+
+		// Return the count result.
+		return exists
+	}
 
 	/**
 	 * Modify multiple entities of the model, matching the submitted filter expression, with the supplied values.
+	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
 	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param values Values used to modify the matching entities.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws UniqueConstraintViolationError, ValidationError.
 	 */
-	public abstract async modify(
+	public async modify(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		filterExpression: IFilterItem | IFilterItem[],
 		values: IModifyValues,
-		options: IModifyOptions,
-	): Promise<IEntity[]>
+		options: IModifyOptions = {},
+	) {
+		// Optionally validate the submitted filter expression.
+		if (!options.isFilterValidationDisabled) {
+			this._validateFilterExpression(filterExpression)
+		}
+
+		// Optionally validate the submitted filter expression.
+		if (!options.isValuesValidationDisabled) {
+			this._validateModifyValues(values)
+		}
+
+		// Prepare the query builder for the update operation.
+		const queryBuilder = this.updateQueryBuilder(
+			(filterExpression as any) as IWhereFilterItem | IWhereFilterItem[],
+			(values as any) as IUpdateValues, options)
+
+		// Execute the prepared query builder.
+		const entities = await writeExecutor(queryBuilder) as IEntity[]
+
+		// Return the created entities.
+		return entities
+	}
 
 	/**
 	 * Modify a single entity of the model, matching the submitted filter expression, with the supplied values.
@@ -180,15 +269,31 @@ export abstract class BaseModel<
 
 	/**
 	 * Destroy multiple entities of the model, matching the submitted filter expression.
+	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
 	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
+	 * @throws UniqueConstraintViolationError, ValidationError.
 	 */
-	public abstract async destroy(
+	public async destroy(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		filterExpression: IFilterItem | IFilterItem[],
-		options: IDestroyOptions,
-	): Promise<IEntity[]>
+		options: IDestroyOptions = {},
+	) {
+		// Optionally validate the submitted filter expression.
+		if (!options.isValidationDisabled) {
+			this._validateFilterExpression(filterExpression)
+		}
+
+		// Prepare the query builder for the delete operation.
+		const queryBuilder = this.deleteQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
+
+		// Execute the prepared query.
+		const entities = await queryBuilder as IEntity[]
+
+		// Return the destroyed entities.
+		return entities
+	}
 
 	/**
 	 * Destroy a single entity of the model, matching the submitted filter expression.
@@ -210,6 +315,42 @@ export abstract class BaseModel<
 			return this._retrieveOne(entities)
 		}, options.transaction)
 	}
+
+	/**
+	 * Defines how an array of create values should be validated.
+	 * Throws an error if the inputs are invalid, otherwise does nothing.
+	 * @param this An instance of the BaseModel class.
+	 * @param values An array of values used to create the entities.
+	 * @throws ValidationError.
+	 */
+	protected abstract async _validateCreateValues(
+		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		values: ICreateValues[],
+	)
+
+	/**
+	 * Defines how modify values should be validated.
+	 * Throws an error if the inputs are invalid, otherwise does nothing.
+	 * @param this An instance of the BaseModel class.
+	 * @param values Values used to modify the matching entities.
+	 * @throws ValidationError.
+	 */
+	protected abstract async _validateModifyValues(
+		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		values: IModifyValues,
+	)
+
+	/**
+	 * Defines how the filter expression should be validated.
+	 * Throws an error if the inputs are invalid, otherwise does nothing.
+	 * @param this An instance of the BaseModel class.
+	 * @param filterExpression A filter expression used to build the query and specify the results.
+	 * @throws ValidationError.
+	 */
+	protected abstract async _validateFilterExpression(
+		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		filterExpression: IFilterItem | IFilterItem[],
+	)
 
 	/**
 	 * Retrieves the first entity from a collection of returned entities.

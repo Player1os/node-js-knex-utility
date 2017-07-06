@@ -32,8 +32,8 @@ export {
 	IModifyOptions,
 } from '.../src/model/base'
 export { GeneralModel } from '.../src/model/general'
-export { GeneralBaseModel } from '.../src/model/general_base'
-export { GeneralKeyModel } from '.../src/model/general_key'
+export { GeneralBaseModel } from '.../src/model/general/base'
+export { GeneralKeyModel } from '.../src/model/general/key'
 export {
 	IKeyEntity,
 	IKeyFilterItem,
