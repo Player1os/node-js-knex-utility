@@ -323,7 +323,7 @@ export abstract class BaseModel<
 	 * @param values An array of values used to create the entities.
 	 * @throws ValidationError.
 	 */
-	protected abstract async _validateCreateValues(
+	protected abstract _validateCreateValues(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		values: ICreateValues[],
 	)
@@ -335,7 +335,7 @@ export abstract class BaseModel<
 	 * @param values Values used to modify the matching entities.
 	 * @throws ValidationError.
 	 */
-	protected abstract async _validateModifyValues(
+	protected abstract _validateModifyValues(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		values: IModifyValues,
 	)
@@ -347,7 +347,7 @@ export abstract class BaseModel<
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected abstract async _validateFilterExpression(
+	protected abstract _validateFilterExpression(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		filterExpression: IFilterItem | IFilterItem[],
 	)
