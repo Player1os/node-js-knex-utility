@@ -9,10 +9,8 @@ export { default as EntityNotFoundError } from '.../src/error/entity_not_found'
 export { default as MultipleEntitiesFoundError } from '.../src/error/multiple_entities_found'
 export { default as UniqueConstraintViolationError } from '.../src/error/unique_constraint_violation'
 
-// Expose the executor functions.
-export { default as countExecutor } from '.../src/executor/count'
-export { default as existsExecutor } from '.../src/executor/exists'
-export { default as writeExecutor } from '.../src/executor/write'
+// Expose the executor function.
+export { default as executor } from '.../src/executor'
 
 // Expose the model classes, interfaces and types.
 export {

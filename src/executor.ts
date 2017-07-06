@@ -4,13 +4,17 @@ import UniqueConstraintViolationError from '.../src/error/unique_constraint_viol
 // Load npm modules.
 import * as Knex from 'knex'
 
+/**
+ * Attempts to execute the query described by a query builder and attempts to classify any known errors.
+ * @param knexQueryBuilder A query builder to be executed.
+ */
 export default async (knexQueryBuilder: Knex.QueryBuilder) => {
 	try {
 		// Execute the query builder.
-		const modifiedRows = await knexQueryBuilder as object[]
+		const returnedRows = await knexQueryBuilder as object[]
 
 		// Return the modified rows.
-		return modifiedRows
+		return returnedRows
 	} catch (err) {
 		// Attempt to better identify the error.
 		switch (err.code) {

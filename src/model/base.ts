@@ -129,7 +129,7 @@ export abstract class BaseModel<
 		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
 
 		// Execute the prepared query builder.
-		const entities = await queryBuilder as IEntity[]
+		const entities = await executor(queryBuilder) as IEntity[]
 
 		// Return the found entities.
 		return entities
@@ -178,8 +178,9 @@ export abstract class BaseModel<
 			this._validateFilterExpression(filterExpression)
 		}
 
-		// Prepare the query builder for the select operation.
+		// Prepare the query builder for the select operation with a count.
 		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
+			.count()
 
 		// Execute the prepared query.
 		const returnedRows = await executor(queryBuilder) as IReturnedCountRow[]
@@ -211,17 +212,15 @@ export abstract class BaseModel<
 			this._validateFilterExpression(filterExpression)
 		}
 
-		// Prepare the query builder for the select operation.
+		// Prepare the query builder for the select operation with a singular limit.
 		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
+			.limit(1)
 
 		// Execute the prepared query.
-		const exists = await executor(queryBuilder)
+		const returnedRows = await executor(queryBuilder) as object[]
 
-		// Execute the prepared query builder with a limit.
-		const returnedRows = await knexQueryBuilder.limit(1) as object[]
-
-		// Return the count result.
-		return exists
+		// Return whether at least one row was returned.
+		return returnedRows.length > 0
 	}
 
 	/**
@@ -255,7 +254,7 @@ export abstract class BaseModel<
 			(values as any) as IUpdateValues, options)
 
 		// Execute the prepared query builder.
-		const entities = await writeExecutor(queryBuilder) as IEntity[]
+		const entities = await executor(queryBuilder) as IEntity[]
 
 		// Return the created entities.
 		return entities
@@ -309,7 +308,7 @@ export abstract class BaseModel<
 		const queryBuilder = this.deleteQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
 
 		// Execute the prepared query.
-		const entities = await queryBuilder as IEntity[]
+		const entities = await executor(queryBuilder) as IEntity[]
 
 		// Return the destroyed entities.
 		return entities
