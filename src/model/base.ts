@@ -93,7 +93,10 @@ export abstract class BaseModel<
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
 		return connection.transaction(async (transaction) => {
 			// Execute the create method with the submitted arguments.
-			const entities = await this.create([values], Object.assign({}, options, { transaction }))
+			const entities = await this.create([values], {
+				...options,
+				transaction,
+			})
 
 			// Return the created entity.
 			return this._retrieveOne(entities)
@@ -144,7 +147,10 @@ export abstract class BaseModel<
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
 		return connection.transaction(async (transaction) => {
 			// Execute the create method with the submitted arguments.
-			const entities = await this.find(filterExpression, Object.assign({}, options, { transaction }))
+			const entities = await this.find(filterExpression, {
+				...options,
+				transaction,
+			})
 
 			// Return the created entity.
 			return this._retrieveOne(entities)
@@ -260,7 +266,10 @@ export abstract class BaseModel<
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
 		return connection.transaction(async (transaction) => {
 			// Execute the update method with the submitted arguments.
-			const entities = await this.modify(filterExpression, values, Object.assign({}, options, { transaction }))
+			const entities = await this.modify(filterExpression, values, {
+				...options,
+				transaction,
+			})
 
 			// Return the updated entity.
 			return this._retrieveOne(entities)
@@ -309,7 +318,10 @@ export abstract class BaseModel<
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
 		return connection.transaction(async (transaction) => {
 			// Execute the destroy method with the submitted arguments.
-			const entities = await this.destroy(filterExpression, Object.assign({}, options, { transaction }))
+			const entities = await this.destroy(filterExpression, {
+				...options,
+				transaction,
+			})
 
 			// Return the destroyed entity.
 			return this._retrieveOne(entities)
