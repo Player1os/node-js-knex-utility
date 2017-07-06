@@ -33,13 +33,13 @@ export { GeneralModel } from '.../src/model/general'
 export { GeneralBaseModel } from '.../src/model/general/base'
 export {
 	TKey as TNumberKey,
-	IKeyEntity as TNumberKeyEntity,
+	IKeyEntity as INumberKeyEntity,
 	IKeyFilterItem as INumberKeyFilterItem,
 	GeneralNumberKeyModel,
 } from '.../src/model/general/number_key'
 export {
 	TKey as TStringKey,
-	IKeyEntity as TStringKeyEntity,
+	IKeyEntity as IStringKeyEntity,
 	IKeyFilterItem as IStringKeyFilterItem,
 	GeneralStringKeyModel,
 } from '.../src/model/general/string_key'
