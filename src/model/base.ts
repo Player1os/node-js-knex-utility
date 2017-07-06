@@ -2,9 +2,7 @@
 import connection from '.../src/connection'
 import EntityNotFoundError from '.../src/error/entity_not_found'
 import MultipleEntitiesFoundError from '.../src/error/multiple_entities_found'
-import countExecutor from '.../src/executor/count'
-import existsExecutor from '.../src/executor/exists'
-import writeExecutor from '.../src/executor/write'
+import executor from '.../src/executor'
 import {
 	IDeleteOptions,
 	IInsertOptions,
@@ -33,6 +31,11 @@ export interface IModifyOptions extends IUpdateOptions {
 }
 export interface IDestroyOptions extends IDeleteOptions {
 	isValidationDisabled?: boolean,
+}
+
+// Define interface for the returned count row.
+export interface IReturnedCountRow {
+	count: string,
 }
 
 // Expose the base model class.
@@ -71,7 +74,7 @@ export abstract class BaseModel<
 		const queryBuilder = this.insertQueryBuilder((values as any) as IInsertValues[], options)
 
 		// Execute the prepared query builder.
-		const entities = await writeExecutor(queryBuilder) as IEntity[]
+		const entities = await executor(queryBuilder) as IEntity[]
 
 		// Return the created entities.
 		return entities
@@ -179,10 +182,15 @@ export abstract class BaseModel<
 		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
 
 		// Execute the prepared query.
-		const count = await countExecutor(queryBuilder)
+		const returnedRows = await executor(queryBuilder) as IReturnedCountRow[]
 
-		// Return the count result.
-		return count
+		// Check if the result contains at least one row.
+		if (returnedRows.length === 0) {
+			throw new EntityNotFoundError(this.tableName)
+		}
+
+		// Return the parsed result of the count query.
+		return parseInt(returnedRows[0].count, 10)
 	}
 
 	/**
@@ -207,7 +215,10 @@ export abstract class BaseModel<
 		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
 
 		// Execute the prepared query.
-		const exists = await existsExecutor(queryBuilder)
+		const exists = await executor(queryBuilder)
+
+		// Execute the prepared query builder with a limit.
+		const returnedRows = await knexQueryBuilder.limit(1) as object[]
 
 		// Return the count result.
 		return exists
