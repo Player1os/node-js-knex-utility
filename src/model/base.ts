@@ -381,7 +381,7 @@ export abstract class BaseModel<
 	 * @param entities Entities retrived by the execution of a query with results.
 	 * @throws EntityNotFoundError, MultipleEntitiesFoundError.
 	 */
-	private _retrieveOne(
+	protected _retrieveOne(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		entities: IEntity[],
 	) {
