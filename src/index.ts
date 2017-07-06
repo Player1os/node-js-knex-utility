@@ -31,14 +31,19 @@ export {
 } from '.../src/model/base'
 export { GeneralModel } from '.../src/model/general'
 export { GeneralBaseModel } from '.../src/model/general/base'
-export { GeneralKeyModel } from '.../src/model/general/key'
 export {
-	IKeyEntity,
-	IKeyFilterItem,
-	KeyModel,
-	TKey,
-	TKeyArray,
-} from '.../src/model/key'
+	TKey as TNumberKey,
+	IKeyEntity as TNumberKeyEntity,
+	IKeyFilterItem as INumberKeyFilterItem,
+	GeneralNumberKeyModel,
+} from '.../src/model/general/number_key'
+export {
+	TKey as TStringKey,
+	IKeyEntity as TStringKeyEntity,
+	IKeyFilterItem as IStringKeyFilterItem,
+	GeneralStringKeyModel,
+} from '.../src/model/general/string_key'
+export { KeyModel } from '.../src/model/key'
 
 // Expose the query modifier functions.
 export { default as filerExpressionQueryModifier } from '.../src/modifier/query/filter_expression'

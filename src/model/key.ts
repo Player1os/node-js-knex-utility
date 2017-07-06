@@ -9,44 +9,19 @@ import {
 // Load npm modules.
 import * as lodash from 'lodash'
 
-// Define and expose the types that describe the table key and array of table keys.
-
-/**
- * Possible primary key types.
- */
-export type TKey = number | string
-
-/**
- * Possible array of primary key types.
- */
-export type TKeyArray = number[] | string[]
-
-/**
- * A base entity interface containing the primary key.
- */
-export interface IKeyEntity {
-	key: TKey,
-}
-
-/**
- * A base filter item containing the primary key or an array of primary keys.
- */
-export interface IKeyFilterItem {
-	key?: TKey | TKeyArray,
-}
-
 /**
  * An abstract base class for entities containing a primary key.
  * This extends the base model class, with additional methods that assume the presence of a primary key in the underlying database.
  */
 export abstract class KeyModel<
-	IEntity extends IKeyEntity,
+	TKey extends (number | string),
+	IEntity extends { key: TKey },
 	ICreateValues extends object,
 	IModifyValues extends object,
-	IFilterItem extends IKeyFilterItem,
+	IFilterItem extends { key?: TKey | TKey[] },
 	IInsertValues extends object,
 	IUpdateValues extends object,
-	IWhereFilterItem extends IKeyFilterItem
+	IWhereFilterItem extends { key?: TKey | TKey[] }
 > extends BaseModel<
 	IEntity,
 	ICreateValues,
@@ -65,7 +40,7 @@ export abstract class KeyModel<
 	 * @throws EntityNotFoundError.
 	 */
 	public async findByKey(
-		this: KeyModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		key: TKey,
 		options: IFindOptions = {},
 	) {
@@ -82,7 +57,7 @@ export abstract class KeyModel<
 	 * @throws EntityNotFoundError.
 	 */
 	public async modifyByKey(
-		this: KeyModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		key: TKey,
 		values: IModifyValues,
 		options: IModifyOptions = {},
@@ -99,7 +74,7 @@ export abstract class KeyModel<
 	 * @throws EntityNotFoundError.
 	 */
 	public async modifyEntity(
-		this: KeyModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		entity: IEntity,
 		options: IModifyOptions = {},
 	) {
@@ -115,7 +90,7 @@ export abstract class KeyModel<
 	 * @throws EntityNotFoundError.
 	 */
 	public async destroyByKey(
-		this: KeyModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		key: TKey,
 		options: IDestroyOptions = {},
 	) {
@@ -131,7 +106,7 @@ export abstract class KeyModel<
 	 * @throws EntityNotFoundError.
 	 */
 	public async destroyEntity(
-		this: KeyModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		entity: IEntity,
 		options: IDestroyOptions = {},
 	) {
