@@ -16,6 +16,7 @@ export interface IReturningOptions extends IOptions {
 	returningFields?: string[],
 }
 export interface IInsertOptions {
+	isEmptyValuesVerificationDisabled?: boolean,
 	returningFields?: string[],
 	transaction?: Knex.Transaction,
 }
@@ -35,6 +36,7 @@ export interface ISelectOptions extends IOptions {
 	transaction?: Knex.Transaction,
 }
 export interface IUpdateOptions {
+	isEmptyValuesVerificationDisabled?: boolean,
 	returningFields?: string[],
 	transaction?: Knex.Transaction,
 }
@@ -144,15 +146,17 @@ export class Model<
 		values: IInsertValues[],
 		options: IInsertOptions = {},
 	) {
-		// Verify that the submitted values are not empty.
-		if (lodash.isEmpty(values)) {
-			throw new EmptyValuesError()
-		} else {
-			values.forEach((valuesEntry) => {
-				if (lodash.isEmpty(valuesEntry)) {
-					throw new EmptyValuesError()
-				}
-			})
+		// Optionally verify that the submitted values are not empty.
+		if (!options.isEmptyValuesVerificationDisabled) {
+			if (lodash.isEmpty(values)) {
+				throw new EmptyValuesError()
+			} else {
+				values.forEach((valuesEntry) => {
+					if (lodash.isEmpty(valuesEntry)) {
+						throw new EmptyValuesError()
+					}
+				})
+			}
 		}
 
 		// Prepare a query builder.
@@ -225,9 +229,11 @@ export class Model<
 		values: IUpdateValues,
 		options: IUpdateOptions,
 	) {
-		// Verify that the submitted values are not empty.
-		if (lodash.isEmpty(values)) {
-			throw new EmptyValuesError()
+		// Optionally verify that the submitted values are not empty.
+		if (!options.isEmptyValuesVerificationDisabled) {
+			if (lodash.isEmpty(values)) {
+				throw new EmptyValuesError()
+			}
 		}
 
 		// Prepare an update query builder.
