@@ -7,5 +7,5 @@ import * as Knex from 'knex'
  */
 export default async (knexInstance: Knex, tableName: string, columnName: string) => {
 	await knexInstance.raw(`alter table ?? alter constraint ?? deferrable initially deferred`,
-		tableName, `${tableName}_${columnName}_foreign`)
+		[tableName, `${tableName}_${columnName}_foreign`])
 }
