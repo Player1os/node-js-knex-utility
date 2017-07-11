@@ -51,7 +51,7 @@ export { default as filerExpressionItemQueryModifier } from '.../src/modifier/qu
 
 // Expose the schema modifier functions.
 export { default as alterColumnSchemaModifier } from '.../src/modifier/schema/alter_column'
-export { default as foreignConstraintExecutorSchemaModifier } from '.../src/modifier/schema/foreign_constraint_executor'
+export { default as ForeignConstraintExecutorSchemaModifier } from '.../src/modifier/schema/foreign_constraint_executor'
 
 // Expose the connection class and instance.
 export { Connection }
