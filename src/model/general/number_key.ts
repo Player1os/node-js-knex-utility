@@ -31,4 +31,4 @@ export interface IKeyFilterItem {
  * An abstract class version of the KeyModel class with the generic parameters set to the most general type and assuming a number key type.
  */
 export abstract class GeneralNumberKeyModel
-	extends KeyModel<TKey, IKeyEntity, IKeyValues, IKeyValues, IKeyFilterItem, IKeyValues, IKeyValues, IKeyFilterItem> {}
+	extends KeyModel<TKey, IKeyEntity, IKeyValues, object, IKeyFilterItem, IKeyValues, object, IKeyFilterItem> {}

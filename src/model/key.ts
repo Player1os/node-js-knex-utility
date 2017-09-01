@@ -18,10 +18,10 @@ export abstract class KeyModel<
 	TKey extends (number | string),
 	IEntity extends { key: TKey },
 	ICreateValues extends { key?: TKey },
-	IModifyValues extends { key?: TKey },
+	IModifyValues extends object,
 	IFilterItem extends { key?: TKey | TKey[] },
 	IInsertValues extends { key?: TKey },
-	IUpdateValues extends { key?: TKey },
+	IUpdateValues extends object,
 	IWhereFilterItem extends { key?: TKey | TKey[] }
 > extends BaseModel<
 	IEntity,
