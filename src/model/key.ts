@@ -7,6 +7,9 @@ import {
 	IModifyOptions,
 } from '.../src/model/base'
 
+// Load npm modules.
+import * as lodash from 'lodash'
+
 /**
  * An abstract base class for entities containing a primary key.
  * This extends the base model class, with additional methods that assume the presence of a primary key in the underlying database.
@@ -37,11 +40,14 @@ export abstract class KeyModel<
 	public async getNextKeyValue(
 		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 	) {
+		// Prepare the query for retrieving the next value.
 		const queryBuilder = connection.instance.raw(`SELECT nextval('${this.tableName}_key_seq');`)
 
+		// Execute the prepared query.
 		const result = await queryBuilder
 
-		return result
+		// Retrieve the next value from the result.
+		return (lodash.head(result['rows']) as object)['nextval'] as string
 	}
 
 	/**
