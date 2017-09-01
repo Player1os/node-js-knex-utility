@@ -14,7 +14,14 @@ export interface IKeyEntity {
 }
 
 /**
- * A base filter item containing the primary key or an array of primary keys.
+ * A base values interface containing the optional primary key.
+ */
+export interface IKeyValues {
+	key?: TKey,
+}
+
+/**
+ * A base filter item interface containing the primary key or an array of primary keys.
  */
 export interface IKeyFilterItem {
 	key?: TKey | TKey[],
@@ -24,4 +31,4 @@ export interface IKeyFilterItem {
  * An abstract class version of the KeyModel class with the generic parameters set to the most general type and assuming a string key type.
  */
 export abstract class GeneralStringKeyModel
-	extends KeyModel<TKey, IKeyEntity, object, object, IKeyFilterItem, object, object, IKeyFilterItem> {}
+	extends KeyModel<TKey, IKeyEntity, IKeyValues, IKeyValues, IKeyFilterItem, IKeyValues, IKeyValues, IKeyFilterItem> {}

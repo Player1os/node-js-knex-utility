@@ -1,4 +1,5 @@
 // Load app modules.
+import connection from '.../src/connection'
 import {
 	BaseModel,
 	IDestroyOptions,
@@ -13,11 +14,11 @@ import {
 export abstract class KeyModel<
 	TKey extends (number | string),
 	IEntity extends { key: TKey },
-	ICreateValues extends object,
-	IModifyValues extends object,
+	ICreateValues extends { key?: TKey },
+	IModifyValues extends { key?: TKey },
 	IFilterItem extends { key?: TKey | TKey[] },
-	IInsertValues extends object,
-	IUpdateValues extends object,
+	IInsertValues extends { key?: TKey },
+	IUpdateValues extends { key?: TKey },
 	IWhereFilterItem extends { key?: TKey | TKey[] }
 > extends BaseModel<
 	IEntity,
@@ -28,6 +29,21 @@ export abstract class KeyModel<
 	IUpdateValues,
 	IWhereFilterItem
 > {
+	/**
+	 * Assuming the table contains a primary key field named 'key' that has an associated autoincrement sequence,
+	 * this method increments the sequence and returns the current value.
+	 * @param this An instance of the KeyModel class.
+	 */
+	public async getNextKeyValue(
+		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+	) {
+		const queryBuilder = connection.instance.raw(`SELECT nextval('${this.tableName}_key_seq');`)
+
+		const result = await queryBuilder
+
+		return result
+	}
+
 	/**
 	 * Find a single entity of the model with the supplied key.
 	 * This method internally calls the findOne method.
