@@ -243,7 +243,7 @@ export abstract class BaseModel<
 			this._validateFilterExpression(filterExpression)
 		}
 
-		// Optionally validate the submitted filter expression.
+		// Optionally validate the submitted modify values.
 		if (!options.isValuesValidationDisabled) {
 			this._validateModifyValues(values)
 		}
