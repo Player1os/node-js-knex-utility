@@ -61,7 +61,7 @@ export class Model<
 		protected readonly fieldNames: string[],
 	) {
 		// Verify whether the table name is non-empty.
-		if (!this.tableName) {
+		if (this.tableName === '') {
 			throw new Error('The table name is empty.')
 		}
 	}
@@ -82,9 +82,9 @@ export class Model<
 		tableNameAlias?: string,
 	) {
 		return knexQueryBuilder.join(
-			(tableNameAlias)
-				? `${this.tableName} as ${tableNameAlias}`
-				: this.tableName,
+			(tableNameAlias === undefined) || (tableNameAlias === '')
+				? this.tableName
+				: `${this.tableName} as ${tableNameAlias}`,
 			column, foreignColumn)
 	}
 
@@ -99,13 +99,13 @@ export class Model<
 	) {
 		// Initialize the query builder, may optionally contain an alias for the model's table.
 		const knexQueryBuilder = connection.instance(
-			(options.tableNameAlias)
-			? `${this.tableName} as ${options.tableNameAlias}`
-			: this.tableName,
+			(options.tableNameAlias === undefined)
+			? this.tableName
+			: `${this.tableName} as ${options.tableNameAlias}`,
 		)
 
 		// Optionally use the supplied transaction.
-		if (options.transaction) {
+		if (options.transaction !== undefined) {
 			knexQueryBuilder.transacting(options.transaction)
 		}
 
@@ -124,7 +124,7 @@ export class Model<
 		returningFields?: string[],
 	) {
 		// Optionally enable the returning of created rows.
-		if (!returningFields) {
+		if (returningFields === undefined) {
 			knexQueryBuilder.returning(this.fieldNames)
 		} else if (!lodash.isEmpty(returningFields)) {
 			knexQueryBuilder.returning(returningFields)
@@ -147,7 +147,7 @@ export class Model<
 		options: IInsertOptions = {},
 	) {
 		// Optionally verify that the submitted values are not empty.
-		if (!options.isEmptyValuesVerificationDisabled) {
+		if ((options.isEmptyValuesVerificationDisabled === undefined) || !options.isEmptyValuesVerificationDisabled) {
 			if (lodash.isEmpty(values)) {
 				throw new EmptyValuesError()
 			} else {
@@ -185,27 +185,27 @@ export class Model<
 
 		// Optionally use the supplied field name aliases to fill the select clause.
 		queryBuilder.select(
-			(options.fieldNameAliases)
-				? lodash.map(options.fieldNameAliases, (fieldName, fieldAlias) => {
-					return (fieldAlias)
-						? `${fieldName} as ${fieldAlias}`
-						: fieldName
-				})
-				: this.fieldNames,
+			options.fieldNameAliases === undefined
+				? this.fieldNames
+				: lodash.map(options.fieldNameAliases, (fieldName, fieldAlias) => {
+					return fieldAlias === ''
+						? fieldName
+						: `${fieldName} as ${fieldAlias}`
+				}),
 		)
 
 		// Apply the filter expression query modifier.
 		filterExpressionQueryModifier(queryBuilder, filterExpression)
 
 		// Optionally use the supplied order by parameter to generate an order by clause.
-		if (options.orderBy) {
+		if (options.orderBy !== undefined) {
 			options.orderBy.forEach((orderByClause) => {
 				queryBuilder.orderBy(orderByClause.column, orderByClause.direction)
 			})
 		}
 
 		// Optionally use the supplied pagination parameter to generate a limit and offset clause.
-		if (options.page) {
+		if (options.page !== undefined) {
 			queryBuilder
 				.limit(options.page.size)
 				.offset(options.page.size * (options.page.number - 1))
@@ -230,7 +230,7 @@ export class Model<
 		options: IUpdateOptions,
 	) {
 		// Optionally verify that the submitted values are not empty.
-		if (!options.isEmptyValuesVerificationDisabled) {
+		if ((options.isEmptyValuesVerificationDisabled === undefined) || !options.isEmptyValuesVerificationDisabled) {
 			if (lodash.isEmpty(values)) {
 				throw new EmptyValuesError()
 			}

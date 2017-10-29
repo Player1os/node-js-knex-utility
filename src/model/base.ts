@@ -66,7 +66,7 @@ export abstract class BaseModel<
 		options: ICreateOptions = {},
 	) {
 		// Optionally validate the submitted create values.
-		if (!options.isValidationDisabled) {
+		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
 			this._validateCreateValues(values)
 		}
 
@@ -121,7 +121,7 @@ export abstract class BaseModel<
 		options: IFindOptions = {},
 	) {
 		// Optionally validate the submitted filter expression.
-		if (!options.isValidationDisabled) {
+		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
 			this._validateFilterExpression(filterExpression)
 		}
 
@@ -174,7 +174,7 @@ export abstract class BaseModel<
 		options: ICountOptions = {},
 	) {
 		// Optionally validate the submitted filter expression.
-		if (!options.isValidationDisabled) {
+		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
 			this._validateFilterExpression(filterExpression)
 		}
 
@@ -208,7 +208,7 @@ export abstract class BaseModel<
 		options: IExistsOptions = {},
 	) {
 		// Optionally validate the submitted filter expression.
-		if (!options.isValidationDisabled) {
+		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
 			this._validateFilterExpression(filterExpression)
 		}
 
@@ -239,12 +239,12 @@ export abstract class BaseModel<
 		options: IModifyOptions = {},
 	) {
 		// Optionally validate the submitted filter expression.
-		if (!options.isFilterValidationDisabled) {
+		if ((options.isFilterValidationDisabled === undefined) || !options.isFilterValidationDisabled) {
 			this._validateFilterExpression(filterExpression)
 		}
 
 		// Optionally validate the submitted modify values.
-		if (!options.isValuesValidationDisabled) {
+		if ((options.isValuesValidationDisabled === undefined) || !options.isValuesValidationDisabled) {
 			this._validateModifyValues(values)
 		}
 
@@ -300,7 +300,7 @@ export abstract class BaseModel<
 		options: IDestroyOptions = {},
 	) {
 		// Optionally validate the submitted filter expression.
-		if (!options.isValidationDisabled) {
+		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
 			this._validateFilterExpression(filterExpression)
 		}
 

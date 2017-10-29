@@ -21,7 +21,7 @@ export class Connection {
 	 * @param this An instance of the Connecntion class.
 	 */
 	public get instance(this: Connection) {
-		if (!this._instance) {
+		if (this._instance === null) {
 			throw new Error('The knex instance has not been initialized.')
 		}
 
@@ -38,7 +38,7 @@ export class Connection {
 		transaction?: Knex.Transaction,
 	): Promise<T> {
 		// If a transaction is provided use it.
-		if (transaction) {
+		if (transaction !== undefined) {
 			return callback(transaction)
 		}
 
@@ -89,7 +89,7 @@ export class Connection {
 		}
 
 		// Perform the actual disconnecting.
-		if (this._instance) {
+		if (this._instance !== null) {
 			await this._instance.destroy()
 		}
 	}
