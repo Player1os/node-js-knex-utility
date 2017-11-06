@@ -40,23 +40,20 @@ export default class UniqueConstraintViolationError extends BaseError {
 		const fields = fieldsString.split(', ')
 		const values = valuesString.split(', ')
 		this.details = fields.reduce((accumulator, field) => {
-			// Parse the error item.
-			const errorItem = {
+			// Add to the array of error items for the given path.
+			if (!(field in accumulator)) {
+				accumulator[field] = []
+			}
+			accumulator[field].push({
 				value: valuesString,
 				type: 'any.db_unique_constraint',
 				message: `The constraint "${knexError.table}"."${knexError.constraint}" has been violated, while attempting to`
 					+ ` set the (${valuesString}) value${(values.length > 1) ? 's' : ''}`
 					+ ` in the (${fieldsString}) field${(fields.length > 1) ? 's' : ''}.`,
-			}
-
-			// Add to the array of error items for the given path.
-			if (!(field in accumulator)) {
-				accumulator[field] = []
-			}
-			accumulator[field].push(errorItem)
+			})
 
 			// Return the accumulated error items.
 			return accumulator
-		}, {})
+		}, {} as { [field: string]: IErrorItem[] })
 	}
 }

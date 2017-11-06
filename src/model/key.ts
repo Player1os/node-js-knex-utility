@@ -47,7 +47,7 @@ export abstract class KeyModel<
 		const result = await queryBuilder
 
 		// Retrieve the next value from the result.
-		return (lodash.head(result['rows']) as object)['nextval'] as string
+		return (lodash.head(result['rows']) as { nextval: TKey }).nextval
 	}
 
 	/**

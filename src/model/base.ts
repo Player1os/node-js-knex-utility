@@ -348,7 +348,7 @@ export abstract class BaseModel<
 	protected abstract _validateCreateValues(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		values: ICreateValues[],
-	)
+	): void
 
 	/**
 	 * Defines how modify values should be validated.
@@ -360,7 +360,7 @@ export abstract class BaseModel<
 	protected abstract _validateModifyValues(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		values: IModifyValues,
-	)
+	): void
 
 	/**
 	 * Defines how the filter expression should be validated.
@@ -372,7 +372,7 @@ export abstract class BaseModel<
 	protected abstract _validateFilterExpression(
 		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 		filterExpression: IFilterItem | IFilterItem[],
-	)
+	): void
 
 	/**
 	 * Retrieves the first entity from a collection of returned entities.
