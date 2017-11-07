@@ -1,8 +1,5 @@
 // Load local modules.
-import {
-	Connection,
-	default as connection,
-} from '.../src/connection'
+import { Connection } from '.../src/connection'
 
 // Expose the error classes.
 export { default as EntityNotFoundError } from '.../src/error/entity_not_found'
@@ -55,4 +52,3 @@ export { default as alterDeferredForeignConstraintSchemaModifier } from '.../src
 
 // Expose the connection class and instance.
 export { Connection }
-export default connection

@@ -1,5 +1,4 @@
 // Load local modules.
-import connection from '.../src/connection'
 import {
 	BaseModel,
 	IDestroyOptions,
@@ -41,7 +40,7 @@ export abstract class KeyModel<
 		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
 	) {
 		// Prepare the query for retrieving the next value.
-		const queryBuilder = connection.instance.raw(`SELECT nextval('${this.tableName}_key_seq');`)
+		const queryBuilder = this.connection.instance.raw(`SELECT nextval('${this.tableName}_key_seq');`)
 
 		// Execute the prepared query.
 		const result = await queryBuilder

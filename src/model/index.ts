@@ -1,5 +1,5 @@
 // Load local modules.
-import connection from '.../src/connection'
+import { Connection } from '.../src/connection'
 import EmptyValuesError from '.../src/error/empty_values'
 import filterExpressionQueryModifier from '.../src/modifier/query/filter_expression'
 
@@ -57,6 +57,7 @@ export class Model<
 	 * @param fieldNames The names of the underlying table's fields.
 	 */
 	public constructor(
+		protected readonly connection: Connection,
 		protected readonly tableName: string,
 		protected readonly fieldNames: string[],
 	) {
@@ -98,7 +99,7 @@ export class Model<
 		options: IOptions = {},
 	) {
 		// Initialize the query builder, may optionally contain an alias for the model's table.
-		const knexQueryBuilder = connection.instance(
+		const knexQueryBuilder = this.connection.instance(
 			(options.tableNameAlias === undefined)
 			? this.tableName
 			: `${this.tableName} as ${options.tableNameAlias}`,

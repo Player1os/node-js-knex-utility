@@ -1,5 +1,4 @@
 // Load local modules.
-import connection from '.../src/connection'
 import EntityNotFoundError from '.../src/error/entity_not_found'
 import MultipleEntitiesFoundError from '.../src/error/multiple_entities_found'
 import executor from '.../src/executor'
@@ -94,7 +93,7 @@ export abstract class BaseModel<
 		options: ICreateOptions = {},
 	) {
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
-		return connection.transaction(async (transaction) => {
+		return this.connection.transaction(async (transaction) => {
 			// Execute the create method with the submitted arguments.
 			const entities = await this.create([values], {
 				...options,
@@ -148,7 +147,7 @@ export abstract class BaseModel<
 		options: IFindOptions = {},
 	) {
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
-		return connection.transaction(async (transaction) => {
+		return this.connection.transaction(async (transaction) => {
 			// Execute the create method with the submitted arguments.
 			const entities = await this.find(filterExpression, {
 				...options,
@@ -274,7 +273,7 @@ export abstract class BaseModel<
 		options: IModifyOptions = {},
 	) {
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
-		return connection.transaction(async (transaction) => {
+		return this.connection.transaction(async (transaction) => {
 			// Execute the update method with the submitted arguments.
 			const entities = await this.modify(filterExpression, values, {
 				...options,
@@ -326,7 +325,7 @@ export abstract class BaseModel<
 		options: IDestroyOptions = {},
 	) {
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
-		return connection.transaction(async (transaction) => {
+		return this.connection.transaction(async (transaction) => {
 			// Execute the destroy method with the submitted arguments.
 			const entities = await this.destroy(filterExpression, {
 				...options,
