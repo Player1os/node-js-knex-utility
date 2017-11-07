@@ -1,4 +1,4 @@
-// Load app modules.
+// Load local modules.
 import connection from '.../src/connection'
 import EmptyValuesError from '.../src/error/empty_values'
 import filterExpressionQueryModifier from '.../src/modifier/query/filter_expression'

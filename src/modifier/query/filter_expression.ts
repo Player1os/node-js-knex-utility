@@ -1,4 +1,4 @@
-// Load app modules.
+// Load local modules.
 import filterExpressionItemQueryModifier from '.../src/modifier/query/filter_expression_item'
 
 // Load npm modules.

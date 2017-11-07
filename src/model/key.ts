@@ -1,4 +1,4 @@
-// Load app modules.
+// Load local modules.
 import connection from '.../src/connection'
 import {
 	BaseModel,

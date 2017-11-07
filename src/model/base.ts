@@ -1,4 +1,4 @@
-// Load app modules.
+// Load local modules.
 import connection from '.../src/connection'
 import EntityNotFoundError from '.../src/error/entity_not_found'
 import MultipleEntitiesFoundError from '.../src/error/multiple_entities_found'

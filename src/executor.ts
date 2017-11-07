@@ -1,4 +1,4 @@
-// Load app modules.
+// Load local modules.
 import UniqueConstraintViolationError from '.../src/error/unique_constraint_violation'
 
 // Load npm modules.

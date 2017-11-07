@@ -1,4 +1,4 @@
-// Load app modules.
+// Load local modules.
 import { KeyModel } from '.../src/model/key'
 
 /**
