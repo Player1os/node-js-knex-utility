@@ -1,5 +1,5 @@
-// Load local modules.
-import { Connection } from '.../src/connection'
+// Expose the connection class.
+export { Connection } from '.../src/connection'
 
 // Expose the error classes.
 export { default as EntityNotFoundError } from '.../src/error/entity_not_found'
@@ -18,6 +18,9 @@ export {
 	Model,
 } from '.../src/model'
 export {
+	AttributeModel,
+} from '.../src/model/attribute'
+export {
 	BaseModel,
 	ICreateOptions,
 	ICountOptions,
@@ -27,17 +30,16 @@ export {
 	IModifyOptions,
 } from '.../src/model/base'
 export { GeneralModel } from '.../src/model/general'
+export { GeneralAttributeModel } from '.../src/model/general/attribute'
 export { GeneralBaseModel } from '.../src/model/general/base'
 export {
-	TKey as TNumberKey,
-	IKeyEntity as INumberKeyEntity,
-	IKeyFilterItem as INumberKeyFilterItem,
+	INumberKeyEntity as INumberKeyEntity,
+	INumberKeyFilterItem as INumberKeyFilterItem,
 	GeneralNumberKeyModel,
 } from '.../src/model/general/number_key'
 export {
-	TKey as TStringKey,
-	IKeyEntity as IStringKeyEntity,
-	IKeyFilterItem as IStringKeyFilterItem,
+	IStringKeyEntity as IStringKeyEntity,
+	IStringKeyFilterItem as IStringKeyFilterItem,
 	GeneralStringKeyModel,
 } from '.../src/model/general/string_key'
 export { KeyModel } from '.../src/model/key'
@@ -47,8 +49,7 @@ export { default as filerExpressionQueryModifier } from '.../src/modifier/query/
 export { default as filerExpressionItemQueryModifier } from '.../src/modifier/query/filter_expression_item'
 
 // Expose the schema modifier functions.
+export { default as addDoubleColumn } from '.../src/modifier/schema/add_double_column'
 export { default as alterColumnSchemaModifier } from '.../src/modifier/schema/alter_column'
 export { default as alterDeferredForeignConstraintSchemaModifier } from '.../src/modifier/schema/alter_deferred_foreign_constraint'
-
-// Expose the connection class and instance.
-export { Connection }
+export { default as createAttributeValueColumns } from '.../src/modifier/schema/create_attribute_value_columns'
