@@ -1,34 +1,36 @@
 // Load local modules.
-import { KeyModel } from '.../src/model/key'
-
-/**
- * A type for the primary key.
- */
-export type TKey = string
+import { StringKeyModel } from '.../src/model/string_key'
 
 /**
  * A base entity interface containing the primary key.
  */
-export interface IKeyEntity {
-	key: TKey,
+export interface IStringKeyEntity {
+	key: string,
 }
 
 /**
  * A base values interface containing the optional primary key.
  */
-export interface IKeyValues {
-	key?: TKey,
+export interface IStringKeyValues {
+	key?: string,
 }
 
 /**
  * A base filter item interface containing the primary key or an array of primary keys.
  */
-export interface IKeyFilterItem {
-	key?: TKey | TKey[],
+export interface IStringKeyFilterItem {
+	key?: string | string[],
 }
 
 /**
  * An abstract class version of the KeyModel class with the generic parameters set to the most general type and assuming a string key type.
  */
-export abstract class GeneralStringKeyModel
-	extends KeyModel<TKey, IKeyEntity, IKeyValues, object, IKeyFilterItem, IKeyValues, object, IKeyFilterItem> {}
+export abstract class GeneralStringKeyModel extends StringKeyModel<
+	IStringKeyEntity,
+	IStringKeyValues,
+	object,
+	IStringKeyFilterItem,
+	IStringKeyValues,
+	object,
+	IStringKeyFilterItem
+> {}
