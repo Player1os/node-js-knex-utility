@@ -153,13 +153,12 @@ export class Model<
 		if ((options.isEmptyValuesVerificationDisabled === undefined) || !options.isEmptyValuesVerificationDisabled) {
 			if (lodash.isEmpty(values)) {
 				throw new EmptyValuesError()
-			} else {
-				values.forEach((valuesEntry) => {
-					if (lodash.isEmpty(valuesEntry)) {
-						throw new EmptyValuesError()
-					}
-				})
 			}
+			values.forEach((valuesEntry) => {
+				if (lodash.isEmpty(valuesEntry)) {
+					throw new EmptyValuesError()
+				}
+			})
 		}
 
 		// Prepare a query builder.

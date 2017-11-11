@@ -2,6 +2,7 @@
 export { Connection } from '.../src/connection'
 
 // Expose the error classes.
+export { default as EmptyValuesError } from '.../src/error/empty_values'
 export { default as EntityNotFoundError } from '.../src/error/entity_not_found'
 export { default as MultipleEntitiesFoundError } from '.../src/error/multiple_entities_found'
 export { default as UniqueConstraintViolationError } from '.../src/error/unique_constraint_violation'
@@ -33,13 +34,15 @@ export { GeneralModel } from '.../src/model/general'
 // export { GeneralAttributeModel } from '.../src/model/general/attribute'
 export { GeneralBaseModel } from '.../src/model/general/base'
 export {
-	INumberKeyEntity as INumberKeyEntity,
-	INumberKeyFilterItem as INumberKeyFilterItem,
+	INumberKeyEntity,
+	INumberKeyValues,
+	INumberKeyFilterItem,
 	GeneralNumberKeyModel,
 } from '.../src/model/general/number_key'
 export {
-	IStringKeyEntity as IStringKeyEntity,
-	IStringKeyFilterItem as IStringKeyFilterItem,
+	IStringKeyEntity,
+	IStringKeyValues,
+	IStringKeyFilterItem,
 	GeneralStringKeyModel,
 } from '.../src/model/general/string_key'
 export { KeyModel } from '.../src/model/key'

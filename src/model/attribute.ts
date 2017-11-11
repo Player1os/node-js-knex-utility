@@ -2,23 +2,24 @@
 // import { KeyModel } from '.../src/model/key'
 
 // export class AttributeModel<
+// 	IEntity,
+// 	IAttributeEntity,
+// 	IAttributeValueEntity,
 // > extends KeyModel<
 // > {
 // 	protected attributeModel: KeyModel<
 // 	>
 
-// 	protected attributeValueModel:
+// 	protected attributeValueModel: KeyModel<
+// 	>
 
 // 	constructor() {
-// 		class ZZ {
-
-// 		}
 // 	}
+
 // }
 
 // // Expose attribute base model.
 // export default Model.extend({
-// 	// Create new models by extending the current one.
 // 	extend(model) {
 // 		// Call parent method.
 // 		super.extend(model)
@@ -104,6 +105,7 @@
 // 			this.attributeValueTable.attributeKeyField,
 // 		]
 // 	},
+// 	// Create new models by extending the current one.
 // 	createAttributeValues(entityPrimaryKey, attributeDocuments, attributeValues, transaction) {
 // 		// Insert attribute values.
 // 		return knex.instance(this.attributeValueTable.name)
