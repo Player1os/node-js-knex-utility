@@ -28,9 +28,13 @@ export interface INumberKeyFilterItem {
 export abstract class GeneralNumberKeyModel extends NumberKeyModel<
 	INumberKeyEntity,
 	INumberKeyValues,
+	INumberKeyFilterItem,
+	INumberKeyFilterItem,
 	object,
 	INumberKeyFilterItem,
 	INumberKeyValues,
+	INumberKeyFilterItem,
+	INumberKeyFilterItem,
 	object,
 	INumberKeyFilterItem
 > {}

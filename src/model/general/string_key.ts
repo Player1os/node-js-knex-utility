@@ -28,9 +28,13 @@ export interface IStringKeyFilterItem {
 export abstract class GeneralStringKeyModel extends StringKeyModel<
 	IStringKeyEntity,
 	IStringKeyValues,
+	IStringKeyFilterItem,
+	IStringKeyFilterItem,
 	object,
 	IStringKeyFilterItem,
 	IStringKeyValues,
+	IStringKeyFilterItem,
+	IStringKeyFilterItem,
 	object,
 	IStringKeyFilterItem
 > {}

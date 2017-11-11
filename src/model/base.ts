@@ -41,15 +41,21 @@ export interface IReturnedCountRow {
 export abstract class BaseModel<
 	IEntity extends object,
 	ICreateValues extends object,
+	IFindFilterItem extends object,
+	IModifyFilterItem extends object,
 	IModifyValues extends object,
-	IFilterItem extends object,
+	IDestroyFilterItem extends object,
 	IInsertValues extends object,
+	ISelectFilterItem extends object,
+	IUpdateFilterItem extends object,
 	IUpdateValues extends object,
-	IWhereFilterItem extends object
+	IDeleteFilterItem extends object
 > extends Model <
 	IInsertValues,
+	ISelectFilterItem,
+	IUpdateFilterItem,
 	IUpdateValues,
-	IWhereFilterItem
+	IDeleteFilterItem
 > {
 	/**
 	 * Create multiple entities of the model, using the provided array of values.
@@ -60,7 +66,19 @@ export abstract class BaseModel<
 	 * @throws UniqueConstraintViolationError, ValidationError.
 	 */
 	public async create(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
 		values: ICreateValues[],
 		options: ICreateOptions = {},
 	) {
@@ -70,7 +88,7 @@ export abstract class BaseModel<
 		}
 
 		// Prepare the query builder for the insert operation.
-		const queryBuilder = this.insertQueryBuilder((values as any) as IInsertValues[], options)
+		const queryBuilder = this.insertQueryBuilder(this._transformCreateValues(values), options)
 
 		// Execute the prepared query builder.
 		const entities = await executor(queryBuilder) as IEntity[]
@@ -88,7 +106,19 @@ export abstract class BaseModel<
 	 * @throws EntityNotFoundError, MultipleEntitiesFoundError, UniqueConstraintViolationError.
 	 */
 	public async createOne(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
 		values: ICreateValues,
 		options: ICreateOptions = {},
 	) {
@@ -115,17 +145,29 @@ export abstract class BaseModel<
 	 * @throws ValidationError.
 	 */
 	public async find(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IFilterItem | IFilterItem[],
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IFindFilterItem | IFindFilterItem[],
 		options: IFindOptions = {},
 	) {
 		// Optionally validate the submitted filter expression.
 		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
-			this._validateFilterExpression(filterExpression)
+			this._validateFindFilterExpression(filterExpression)
 		}
 
 		// Prepare the query builder for the select operation.
-		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
+		const queryBuilder = this.selectQueryBuilder(this._transformFindFilterExpression(filterExpression), options)
 
 		// Execute the prepared query builder.
 		const entities = await executor(queryBuilder) as IEntity[]
@@ -142,8 +184,20 @@ export abstract class BaseModel<
 	 * @throws EntityNotFoundError, MultipleEntitiesFoundError.
 	 */
 	public async findOne(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IFilterItem | IFilterItem[],
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IFindFilterItem | IFindFilterItem[],
 		options: IFindOptions = {},
 	) {
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
@@ -168,17 +222,29 @@ export abstract class BaseModel<
 	 * @throws ValidationError.
 	 */
 	public async count(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IFilterItem | IFilterItem[],
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IFindFilterItem | IFindFilterItem[],
 		options: ICountOptions = {},
 	) {
 		// Optionally validate the submitted filter expression.
 		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
-			this._validateFilterExpression(filterExpression)
+			this._validateFindFilterExpression(filterExpression)
 		}
 
 		// Prepare the query builder for the select operation with a count.
-		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
+		const queryBuilder = this.selectQueryBuilder(this._transformFindFilterExpression(filterExpression), options)
 			.count()
 
 		// Execute the prepared query.
@@ -202,17 +268,29 @@ export abstract class BaseModel<
 	 * @throws ValidationError.
 	 */
 	public async exists(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IFilterItem | IFilterItem[],
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IFindFilterItem | IFindFilterItem[],
 		options: IExistsOptions = {},
 	) {
 		// Optionally validate the submitted filter expression.
 		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
-			this._validateFilterExpression(filterExpression)
+			this._validateFindFilterExpression(filterExpression)
 		}
 
 		// Prepare the query builder for the select operation with a singular limit.
-		const queryBuilder = this.selectQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
+		const queryBuilder = this.selectQueryBuilder(this._transformFindFilterExpression(filterExpression), options)
 			.limit(1)
 
 		// Execute the prepared query.
@@ -232,14 +310,26 @@ export abstract class BaseModel<
 	 * @throws UniqueConstraintViolationError, ValidationError.
 	 */
 	public async modify(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IFilterItem | IFilterItem[],
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IModifyFilterItem | IModifyFilterItem[],
 		values: IModifyValues,
 		options: IModifyOptions = {},
 	) {
 		// Optionally validate the submitted filter expression.
 		if ((options.isFilterValidationDisabled === undefined) || !options.isFilterValidationDisabled) {
-			this._validateFilterExpression(filterExpression)
+			this._validateModifyFilterExpression(filterExpression)
 		}
 
 		// Optionally validate the submitted modify values.
@@ -249,8 +339,8 @@ export abstract class BaseModel<
 
 		// Prepare the query builder for the update operation.
 		const queryBuilder = this.updateQueryBuilder(
-			(filterExpression as any) as IWhereFilterItem | IWhereFilterItem[],
-			(values as any) as IUpdateValues, options)
+			this._transformModifyFilterExpression(filterExpression),
+			this._transformModifyValues(values), options)
 
 		// Execute the prepared query builder.
 		const entities = await executor(queryBuilder) as IEntity[]
@@ -267,8 +357,20 @@ export abstract class BaseModel<
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public async modifyOne(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IFilterItem | IFilterItem[],
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IModifyFilterItem | IModifyFilterItem[],
 		values: IModifyValues,
 		options: IModifyOptions = {},
 	) {
@@ -294,17 +396,29 @@ export abstract class BaseModel<
 	 * @throws UniqueConstraintViolationError, ValidationError.
 	 */
 	public async destroy(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IFilterItem | IFilterItem[],
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
 		options: IDestroyOptions = {},
 	) {
 		// Optionally validate the submitted filter expression.
 		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
-			this._validateFilterExpression(filterExpression)
+			this._validateDestroyFilterExpression(filterExpression)
 		}
 
 		// Prepare the query builder for the delete operation.
-		const queryBuilder = this.deleteQueryBuilder((filterExpression as any) as IWhereFilterItem | IWhereFilterItem[], options)
+		const queryBuilder = this.deleteQueryBuilder(this._transformDestroyFilterExpression(filterExpression), options)
 
 		// Execute the prepared query.
 		const entities = await executor(queryBuilder) as IEntity[]
@@ -320,8 +434,20 @@ export abstract class BaseModel<
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
 	public async destroyOne(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IFilterItem | IFilterItem[],
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
 		options: IDestroyOptions = {},
 	) {
 		// Enclose in a transaction to ensure changes are reverted if an error is thrown from within and return its result.
@@ -345,9 +471,137 @@ export abstract class BaseModel<
 	 * @throws ValidationError.
 	 */
 	protected abstract _validateCreateValues(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
 		values: ICreateValues[],
 	): void
+
+	/**
+	 * Defines the transformation of create values to the underlying insert values.
+	 * @param this An instance of the BaseModel class.
+	 * @param values An array of values used to create the entities.
+	 */
+	protected abstract _transformCreateValues(
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		values: ICreateValues[],
+	): IInsertValues[]
+
+	/**
+	 * Defines how the find filter expression should be validated.
+	 * Throws an error if the inputs are invalid, otherwise does nothing.
+	 * @param this An instance of the BaseModel class.
+	 * @param filterExpression A filter expression used to build the query and specify the results.
+	 * @throws ValidationError.
+	 */
+	protected abstract _validateFindFilterExpression(
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IFindFilterItem | IFindFilterItem[],
+	): void
+
+	/**
+	 * Defines the transformation of find filter expression to the underlying select filter expression.
+	 * @param this An instance of the BaseModel class.
+	 * @param filterExpression A filter expression used to build the query and specify the results.
+	 * @throws ValidationError.
+	 */
+	protected abstract _transformFindFilterExpression(
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IFindFilterItem | IFindFilterItem[],
+	): ISelectFilterItem | ISelectFilterItem[]
+
+	/**
+	 * Defines how modify filter expression should be validated.
+	 * Throws an error if the inputs are invalid, otherwise does nothing.
+	 * @param this An instance of the BaseModel class.
+	 * @param filterExpression A filter expression used to build the query and specify the results.
+	 * @throws ValidationError.
+	 */
+	protected abstract _validateModifyFilterExpression(
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IModifyFilterItem | IModifyFilterItem[],
+	): void
+
+	/**
+	 * Defines the transformation of modify filter expression to the underlying update filter expression.
+	 * @param this An instance of the BaseModel class.
+	 * @param filterExpression A filter expression used to build the query and specify the results.
+	 * @throws ValidationError.
+	 */
+	protected abstract _transformModifyFilterExpression(
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IModifyFilterItem | IModifyFilterItem[],
+	): IUpdateFilterItem | IUpdateFilterItem[]
 
 	/**
 	 * Defines how modify values should be validated.
@@ -357,21 +611,91 @@ export abstract class BaseModel<
 	 * @throws ValidationError.
 	 */
 	protected abstract _validateModifyValues(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
 		values: IModifyValues,
 	): void
 
 	/**
-	 * Defines how the filter expression should be validated.
+	 * Defines the transformation of modify values to the underlying update values.
+	 * @param this An instance of the BaseModel class.
+	 * @param values Values used to modify the matching entities.
+	 * @throws ValidationError.
+	 */
+	protected abstract _transformModifyValues(
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		values: IModifyValues,
+	): IUpdateValues
+
+	/**
+	 * Defines how the destroy filter expression should be validated.
 	 * Throws an error if the inputs are invalid, otherwise does nothing.
 	 * @param this An instance of the BaseModel class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected abstract _validateFilterExpression(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IFilterItem | IFilterItem[],
+	protected abstract _validateDestroyFilterExpression(
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
 	): void
+
+	/**
+	 * Defines the transformation of destroy filter expression to the underlying delete filter expression.
+	 * @param this An instance of the BaseModel class.
+	 * @param filterExpression A filter expression used to build the query and specify the results.
+	 * @throws ValidationError.
+	 */
+	protected abstract _transformDestroyFilterExpression(
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
+		filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
+	): IDeleteFilterItem | IDeleteFilterItem[]
 
 	/**
 	 * Retrieves the first entity from a collection of returned entities.
@@ -381,7 +705,19 @@ export abstract class BaseModel<
 	 * @throws EntityNotFoundError, MultipleEntitiesFoundError.
 	 */
 	protected _retrieveOne(
-		this: BaseModel<IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: BaseModel<
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
 		entities: IEntity[],
 	) {
 		// Check if at least one entity is given.

@@ -17,19 +17,27 @@ export abstract class KeyModel<
 	TKey extends (number | string),
 	IEntity extends { key: TKey },
 	ICreateValues extends { key?: TKey },
+	IFindFilterItem extends { key?: TKey | TKey[] },
+	IModifyFilterItem extends { key?: TKey | TKey[] },
 	IModifyValues extends object,
-	IFilterItem extends { key?: TKey | TKey[] },
+	IDestroyFilterItem extends { key?: TKey | TKey[] },
 	IInsertValues extends { key?: TKey },
+	ISelectFilterItem extends { key?: TKey | TKey[] },
+	IUpdateFilterItem extends { key?: TKey | TKey[] },
 	IUpdateValues extends object,
-	IWhereFilterItem extends { key?: TKey | TKey[] }
+	IDeleteFilterItem extends { key?: TKey | TKey[] }
 > extends BaseModel<
 	IEntity,
 	ICreateValues,
+	IFindFilterItem,
+	IModifyFilterItem,
 	IModifyValues,
-	IFilterItem,
+	IDestroyFilterItem,
 	IInsertValues,
+	ISelectFilterItem,
+	IUpdateFilterItem,
 	IUpdateValues,
-	IWhereFilterItem
+	IDeleteFilterItem
 > {
 	/**
 	 * Assuming the table contains a primary key field named 'key' that has an associated autoincrement sequence,
@@ -37,7 +45,20 @@ export abstract class KeyModel<
 	 * @param this An instance of the KeyModel class.
 	 */
 	public async getNextKeyValue(
-		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: KeyModel<
+			TKey,
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
 	) {
 		// Prepare the query for retrieving the next value.
 		const queryBuilder = this.connection.instance.raw(`SELECT nextval('${this.tableName}_key_seq');`)
@@ -58,12 +79,25 @@ export abstract class KeyModel<
 	 * @throws EntityNotFoundError.
 	 */
 	public async findByKey(
-		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: KeyModel<
+			TKey,
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
 		key: TKey,
 		options: IFindOptions = {},
 	) {
 		// Call the find one method with the primary key in the filter expression.
-		return this.findOne({ key } as IFilterItem, options)
+		return this.findOne({ key } as IFindFilterItem, options)
 	}
 
 	/**
@@ -75,13 +109,26 @@ export abstract class KeyModel<
 	 * @throws EntityNotFoundError.
 	 */
 	public async modifyByKey(
-		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: KeyModel<
+			TKey,
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
 		key: TKey,
 		values: IModifyValues,
 		options: IModifyOptions = {},
 	) {
 		// Call the update one method with the primary key in the filter expression and pass the submitted values.
-		return this.modifyOne({ key } as IFilterItem, values, options)
+		return this.modifyOne({ key } as IModifyFilterItem, values, options)
 	}
 
 	/**
@@ -92,11 +139,24 @@ export abstract class KeyModel<
 	 * @throws EntityNotFoundError.
 	 */
 	public async destroyByKey(
-		this: KeyModel<TKey, IEntity, ICreateValues, IModifyValues, IFilterItem, IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: KeyModel<
+			TKey,
+			IEntity,
+			ICreateValues,
+			IFindFilterItem,
+			IModifyFilterItem,
+			IModifyValues,
+			IDestroyFilterItem,
+			IInsertValues,
+			ISelectFilterItem,
+			IUpdateFilterItem,
+			IUpdateValues,
+			IDeleteFilterItem
+		>,
 		key: TKey,
 		options: IDestroyOptions = {},
 	) {
 		// Call the destroy one method with the primary key in the filter expression.
-		return this.destroyOne({ key } as IFilterItem, options)
+		return this.destroyOne({ key } as IDestroyFilterItem, options)
 	}
 }

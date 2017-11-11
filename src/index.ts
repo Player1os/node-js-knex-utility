@@ -17,9 +17,9 @@ export {
 	IDeleteOptions,
 	Model,
 } from '.../src/model'
-export {
-	AttributeModel,
-} from '.../src/model/attribute'
+// export {
+// 	AttributeModel,
+// } from '.../src/model/attribute'
 export {
 	BaseModel,
 	ICreateOptions,
@@ -30,7 +30,7 @@ export {
 	IModifyOptions,
 } from '.../src/model/base'
 export { GeneralModel } from '.../src/model/general'
-export { GeneralAttributeModel } from '.../src/model/general/attribute'
+// export { GeneralAttributeModel } from '.../src/model/general/attribute'
 export { GeneralBaseModel } from '.../src/model/general/base'
 export {
 	INumberKeyEntity as INumberKeyEntity,

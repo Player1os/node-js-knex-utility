@@ -4,18 +4,26 @@ import { KeyModel } from '.../src/model/key'
 export abstract class StringKeyModel<
 	IEntity extends { key: string },
 	ICreateValues extends { key?: string },
+	IFindFilterItem extends { key?: string | string[] },
+	IModifyFilterItem extends { key?: string | string[] },
 	IModifyValues extends object,
-	IFilterItem extends { key?: string | string[] },
+	IDestroyFilterItem extends { key?: string | string[] },
 	IInsertValues extends { key?: string },
+	ISelectFilterItem extends { key?: string | string[] },
+	IUpdateFilterItem extends { key?: string | string[] },
 	IUpdateValues extends object,
-	IWhereFilterItem extends { key?: string | string[] }
+	IDeleteFilterItem extends { key?: string | string[] }
 > extends KeyModel<
 	string,
 	IEntity,
 	ICreateValues,
+	IFindFilterItem,
+	IModifyFilterItem,
 	IModifyValues,
-	IFilterItem,
+	IDestroyFilterItem,
 	IInsertValues,
+	ISelectFilterItem,
+	IUpdateFilterItem,
 	IUpdateValues,
-	IWhereFilterItem
+	IDeleteFilterItem
 > {}

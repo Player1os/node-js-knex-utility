@@ -48,8 +48,10 @@ export interface IDeleteOptions {
 // Expose the base model class.
 export class Model<
 	IInsertValues extends object,
+	ISelectFilterItem extends object,
+	IUpdateFilterItem extends object,
 	IUpdateValues extends object,
-	IWhereFilterItem extends object
+	IDeleteFilterItem extends object
 > { // tslint:disable-line:one-line
 	/**
 	 * Creates an instance of the model and confirms the presence and validity of the supplied parameters.
@@ -76,7 +78,7 @@ export class Model<
 	 * @param tableNameAlias An optional alias of the model's table to be joined.
 	 */
 	public joinQueryModifier(
-		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: Model<IInsertValues, ISelectFilterItem, IUpdateFilterItem, IUpdateValues, IDeleteFilterItem>,
 		knexQueryBuilder: Knex.QueryBuilder,
 		column: string,
 		foreignColumn: string,
@@ -95,7 +97,7 @@ export class Model<
 	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected queryBuilder(
-		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: Model<IInsertValues, ISelectFilterItem, IUpdateFilterItem, IUpdateValues, IDeleteFilterItem>,
 		options: IOptions = {},
 	) {
 		// Initialize the query builder, may optionally contain an alias for the model's table.
@@ -120,7 +122,7 @@ export class Model<
 	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected returningQueryModifier(
-		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: Model<IInsertValues, ISelectFilterItem, IUpdateFilterItem, IUpdateValues, IDeleteFilterItem>,
 		knexQueryBuilder: Knex.QueryBuilder,
 		returningFields?: string[],
 	) {
@@ -143,7 +145,7 @@ export class Model<
 	 * @throws EmptyValuesError.
 	 */
 	protected insertQueryBuilder(
-		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
+		this: Model<IInsertValues, ISelectFilterItem, IUpdateFilterItem, IUpdateValues, IDeleteFilterItem>,
 		values: IInsertValues[],
 		options: IInsertOptions = {},
 	) {
@@ -177,8 +179,8 @@ export class Model<
 	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected selectQueryBuilder(
-		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IWhereFilterItem | IWhereFilterItem[],
+		this: Model<IInsertValues, ISelectFilterItem, IUpdateFilterItem, IUpdateValues, IDeleteFilterItem>,
+		filterExpression: ISelectFilterItem | ISelectFilterItem[],
 		options: ISelectOptions = {},
 	) {
 		// Prepare a query builder.
@@ -225,8 +227,8 @@ export class Model<
 	 * @throws EmptyValuesError.
 	 */
 	protected updateQueryBuilder(
-		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IWhereFilterItem | IWhereFilterItem[],
+		this: Model<IInsertValues, ISelectFilterItem, IUpdateFilterItem, IUpdateValues, IDeleteFilterItem>,
+		filterExpression: IUpdateFilterItem | IUpdateFilterItem[],
 		values: IUpdateValues,
 		options: IUpdateOptions,
 	) {
@@ -257,8 +259,8 @@ export class Model<
 	 * @param options Parameters for the underlying query and validation.
 	 */
 	protected deleteQueryBuilder(
-		this: Model<IInsertValues, IUpdateValues, IWhereFilterItem>,
-		filterExpression: IWhereFilterItem | IWhereFilterItem[],
+		this: Model<IInsertValues, ISelectFilterItem, IUpdateFilterItem, IUpdateValues, IDeleteFilterItem>,
+		filterExpression: IDeleteFilterItem | IDeleteFilterItem[],
 		options: IDeleteOptions = {},
 	) {
 		// Prepare an update query builder.
