@@ -71,7 +71,7 @@ export class Model<
 
 	/**
 	 * Modifies the query builder to add a join clause upon the model's table.
-	 * @param this An instance of the Model class.
+	 * @param this An instance of the class.
 	 * @param knexQueryBuilder A query builder to be modified.
 	 * @param column The name of the table's column to be matched in the join expression.
 	 * @param foreignColumn The name of the foreign column to be matched in the join expression.
@@ -93,7 +93,7 @@ export class Model<
 
 	/**
 	 * Creates a general query builder upon the model's table.
-	 * @param this An instance of the Model class.
+	 * @param this An instance of the class.
 	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected queryBuilder(
@@ -118,7 +118,7 @@ export class Model<
 
 	/**
 	 * Modifies the query builder by adding a returning clause. Allows the specification of the individual fields to be returned.
-	 * @param this An instance of the Model class.
+	 * @param this An instance of the class.
 	 * @param options A set of options that determine how the query should be executed.
 	 */
 	protected returningQueryModifier(
@@ -139,7 +139,7 @@ export class Model<
 
 	/**
 	 * Prepare an insert qeury upon the model's table, using the provided values.
-	 * @param this An instance of the Model class.
+	 * @param this An instance of the class.
 	 * @param values An array of values to be inserted.
 	 * @param options A set of options that determine how the query should be executed.
 	 * @throws EmptyValuesError.
@@ -173,7 +173,7 @@ export class Model<
 
 	/**
 	 * Prepare a select query upon the model's table, using the filter expression.
-	 * @param this An instance of the Model class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query should be executed.
 	 */
@@ -219,7 +219,7 @@ export class Model<
 
 	/**
 	 * Prepare an update query builder upon the model's table, using the filter expression and values.
-	 * @param this An instance of the Model class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param values Values to be set and updated.
 	 * @param options A set of options that determine how the query should be executed.
@@ -253,7 +253,7 @@ export class Model<
 
 	/**
 	 * Prepare a delete query builder upon the model's table, using the filter expression.
-	 * @param this An instance of the Model class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options Parameters for the underlying query and validation.
 	 */

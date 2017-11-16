@@ -60,7 +60,7 @@ export abstract class BaseModel<
 	/**
 	 * Create multiple entities of the model, using the provided array of values.
 	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param values An array of values used to create the entities.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 * @throws UniqueConstraintViolationError, ValidationError.
@@ -100,7 +100,7 @@ export abstract class BaseModel<
 	/**
 	 * Create a single entity of the model, using the provided values.
 	 * If none or more than one entity is created, an error is thrown.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param values Values used to create the entity.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 * @throws EntityNotFoundError, MultipleEntitiesFoundError, UniqueConstraintViolationError.
@@ -139,7 +139,7 @@ export abstract class BaseModel<
 	 * Find multiple entities of the model, matching the provided filter expression.
 	 * If none or more than one entity is found, an error is thrown.
 	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 * @throws ValidationError.
@@ -178,7 +178,7 @@ export abstract class BaseModel<
 
 	/**
 	 * Find a single entity of the model, matching the provided filter expression.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 * @throws EntityNotFoundError, MultipleEntitiesFoundError.
@@ -216,7 +216,7 @@ export abstract class BaseModel<
 	/**
 	 * Find the count of all entities of the model, matching the submitted filter expression.
 	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression The query that describes the where clause to be built.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 * @throws ValidationError.
@@ -262,7 +262,7 @@ export abstract class BaseModel<
 	/**
 	 * Find whether at least one entity of the model exists, which matches the submitted filter expression.
 	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 * @throws ValidationError.
@@ -303,7 +303,7 @@ export abstract class BaseModel<
 	/**
 	 * Modify multiple entities of the model, matching the submitted filter expression, with the supplied values.
 	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param values Values used to modify the matching entities.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
@@ -351,7 +351,7 @@ export abstract class BaseModel<
 
 	/**
 	 * Modify a single entity of the model, matching the submitted filter expression, with the supplied values.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param values Values used to modify the matching entity.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
@@ -390,7 +390,7 @@ export abstract class BaseModel<
 	/**
 	 * Destroy multiple entities of the model, matching the submitted filter expression.
 	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 * @throws UniqueConstraintViolationError, ValidationError.
@@ -429,7 +429,7 @@ export abstract class BaseModel<
 
 	/**
 	 * Destroy a single entity of the model, matching the submitted filter expression.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @param options A set of options that determine how the query is executed and whether the inputs are validated.
 	 */
@@ -466,7 +466,7 @@ export abstract class BaseModel<
 	/**
 	 * Defines how an array of create values should be validated.
 	 * Throws an error if the inputs are invalid, otherwise does nothing.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param values An array of values used to create the entities.
 	 * @throws ValidationError.
 	 */
@@ -489,10 +489,10 @@ export abstract class BaseModel<
 
 	/**
 	 * Defines the transformation of create values to the underlying insert values.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param values An array of values used to create the entities.
 	 */
-	protected abstract _transformCreateValues(
+	protected _transformCreateValues(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -507,12 +507,14 @@ export abstract class BaseModel<
 			IDeleteFilterItem
 		>,
 		values: ICreateValues[],
-	): IInsertValues[]
+	) {
+		return values as any as IInsertValues[]
+	}
 
 	/**
 	 * Defines how the find filter expression should be validated.
 	 * Throws an error if the inputs are invalid, otherwise does nothing.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
@@ -535,11 +537,11 @@ export abstract class BaseModel<
 
 	/**
 	 * Defines the transformation of find filter expression to the underlying select filter expression.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected abstract _transformFindFilterExpression(
+	protected _transformFindFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -554,12 +556,14 @@ export abstract class BaseModel<
 			IDeleteFilterItem
 		>,
 		filterExpression: IFindFilterItem | IFindFilterItem[],
-	): ISelectFilterItem | ISelectFilterItem[]
+	) {
+		return filterExpression as any as ISelectFilterItem | ISelectFilterItem[]
+	}
 
 	/**
 	 * Defines how modify filter expression should be validated.
 	 * Throws an error if the inputs are invalid, otherwise does nothing.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
@@ -582,11 +586,11 @@ export abstract class BaseModel<
 
 	/**
 	 * Defines the transformation of modify filter expression to the underlying update filter expression.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected abstract _transformModifyFilterExpression(
+	protected _transformModifyFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -601,12 +605,14 @@ export abstract class BaseModel<
 			IDeleteFilterItem
 		>,
 		filterExpression: IModifyFilterItem | IModifyFilterItem[],
-	): IUpdateFilterItem | IUpdateFilterItem[]
+	) {
+		return filterExpression as any as IUpdateFilterItem | IUpdateFilterItem[]
+	}
 
 	/**
 	 * Defines how modify values should be validated.
 	 * Throws an error if the inputs are invalid, otherwise does nothing.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param values Values used to modify the matching entities.
 	 * @throws ValidationError.
 	 */
@@ -629,11 +635,11 @@ export abstract class BaseModel<
 
 	/**
 	 * Defines the transformation of modify values to the underlying update values.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param values Values used to modify the matching entities.
 	 * @throws ValidationError.
 	 */
-	protected abstract _transformModifyValues(
+	protected _transformModifyValues(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -648,12 +654,14 @@ export abstract class BaseModel<
 			IDeleteFilterItem
 		>,
 		values: IModifyValues,
-	): IUpdateValues
+	) {
+		return values as any as IUpdateValues
+	}
 
 	/**
 	 * Defines how the destroy filter expression should be validated.
 	 * Throws an error if the inputs are invalid, otherwise does nothing.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
@@ -676,11 +684,11 @@ export abstract class BaseModel<
 
 	/**
 	 * Defines the transformation of destroy filter expression to the underlying delete filter expression.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected abstract _transformDestroyFilterExpression(
+	protected _transformDestroyFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -695,12 +703,14 @@ export abstract class BaseModel<
 			IDeleteFilterItem
 		>,
 		filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
-	): IDeleteFilterItem | IDeleteFilterItem[]
+	) {
+		return filterExpression as any as IDeleteFilterItem | IDeleteFilterItem[]
+	}
 
 	/**
 	 * Retrieves the first entity from a collection of returned entities.
 	 * Verifies whether the entity exists and whether mutliple entities are contained in the collection.
-	 * @param this An instance of the BaseModel class.
+	 * @param this An instance of the class.
 	 * @param entities Entities retrived by the execution of a query with results.
 	 * @throws EntityNotFoundError, MultipleEntitiesFoundError.
 	 */
