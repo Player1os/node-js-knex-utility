@@ -1,3 +1,5 @@
+import { NumberKeyModel } from 'src/model/number_key';
+
 // Expose the connection class.
 export { Connection } from '.../src/connection'
 
@@ -46,6 +48,8 @@ export {
 	GeneralStringKeyModel,
 } from '.../src/model/general/string_key'
 export { KeyModel } from '.../src/model/key'
+export { NumberKeyModel } from '.../src/model/number_key'
+export { StringKeyModel } from '.../src/model/string_key'
 
 // Expose the query modifier functions.
 export { default as filerExpressionQueryModifier } from '.../src/modifier/query/filter_expression'
