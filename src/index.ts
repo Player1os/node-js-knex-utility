@@ -1,5 +1,3 @@
-import { NumberKeyModel } from 'src/model/number_key';
-
 // Expose the connection class.
 export { Connection } from '.../src/connection'
 
