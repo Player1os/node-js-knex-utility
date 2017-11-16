@@ -59,9 +59,9 @@ export class Model<
 	 * @param fieldNames The names of the underlying table's fields.
 	 */
 	public constructor(
-		protected readonly connection: Connection,
 		protected readonly tableName: string,
 		protected readonly fieldNames: string[],
+		protected readonly connection: Connection,
 	) {
 		// Verify whether the table name is non-empty.
 		if (this.tableName === '') {

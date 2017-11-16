@@ -38,7 +38,7 @@ export interface IReturnedCountRow {
 }
 
 // Expose the base model class.
-export abstract class BaseModel<
+export class BaseModel<
 	IEntity extends object,
 	ICreateValues extends object,
 	IFindFilterItem extends object,
@@ -470,7 +470,7 @@ export abstract class BaseModel<
 	 * @param values An array of values used to create the entities.
 	 * @throws ValidationError.
 	 */
-	protected abstract _validateCreateValues(
+	protected _validateCreateValues(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -484,8 +484,10 @@ export abstract class BaseModel<
 			IUpdateValues,
 			IDeleteFilterItem
 		>,
-		values: ICreateValues[],
-	): void
+		_values: ICreateValues[],
+	) {
+		throw new Error('An unsupported method has been called.')
+	}
 
 	/**
 	 * Defines the transformation of create values to the underlying insert values.
@@ -518,7 +520,7 @@ export abstract class BaseModel<
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected abstract _validateFindFilterExpression(
+	protected _validateFindFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -532,8 +534,10 @@ export abstract class BaseModel<
 			IUpdateValues,
 			IDeleteFilterItem
 		>,
-		filterExpression: IFindFilterItem | IFindFilterItem[],
-	): void
+		_filterExpression: IFindFilterItem | IFindFilterItem[],
+	)  {
+		throw new Error('An unsupported method has been called.')
+	}
 
 	/**
 	 * Defines the transformation of find filter expression to the underlying select filter expression.
@@ -567,7 +571,7 @@ export abstract class BaseModel<
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected abstract _validateModifyFilterExpression(
+	protected _validateModifyFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -581,8 +585,10 @@ export abstract class BaseModel<
 			IUpdateValues,
 			IDeleteFilterItem
 		>,
-		filterExpression: IModifyFilterItem | IModifyFilterItem[],
-	): void
+		_filterExpression: IModifyFilterItem | IModifyFilterItem[],
+	) {
+		throw new Error('An unsupported method has been called.')
+	}
 
 	/**
 	 * Defines the transformation of modify filter expression to the underlying update filter expression.
@@ -616,7 +622,7 @@ export abstract class BaseModel<
 	 * @param values Values used to modify the matching entities.
 	 * @throws ValidationError.
 	 */
-	protected abstract _validateModifyValues(
+	protected _validateModifyValues(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -630,8 +636,10 @@ export abstract class BaseModel<
 			IUpdateValues,
 			IDeleteFilterItem
 		>,
-		values: IModifyValues,
-	): void
+		_values: IModifyValues,
+	) {
+		throw new Error('An unsupported method has been called.')
+	}
 
 	/**
 	 * Defines the transformation of modify values to the underlying update values.
@@ -665,7 +673,7 @@ export abstract class BaseModel<
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected abstract _validateDestroyFilterExpression(
+	protected _validateDestroyFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -679,8 +687,10 @@ export abstract class BaseModel<
 			IUpdateValues,
 			IDeleteFilterItem
 		>,
-		filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
-	): void
+		_filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
+	)  {
+		throw new Error('An unsupported method has been called.')
+	}
 
 	/**
 	 * Defines the transformation of destroy filter expression to the underlying delete filter expression.

@@ -1,7 +1,7 @@
 // Load local modules.
 import { KeyModel } from '.../src/model/key'
 
-export abstract class NumberKeyModel<
+export class NumberKeyModel<
 	IEntity extends { key: number },
 	ICreateValues extends { key?: number },
 	IFindFilterItem extends { key?: number | number[] },

@@ -1,7 +1,7 @@
 // Load local modules.
 import { KeyModel } from '.../src/model/key'
 
-export abstract class StringKeyModel<
+export class StringKeyModel<
 	IEntity extends { key: string },
 	ICreateValues extends { key?: string },
 	IFindFilterItem extends { key?: string | string[] },
