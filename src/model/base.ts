@@ -1,36 +1,32 @@
 // Load local modules.
 import EntityNotFoundError from '.../src/error/entity_not_found'
 import MultipleEntitiesFoundError from '.../src/error/multiple_entities_found'
-import executor from '.../src/executor'
 import {
-	IDeleteOptions,
-	IInsertOptions,
-	IOptions,
-	ISelectOptions,
-	IUpdateOptions,
-	Model,
-} from '.../src/model'
-
-// Declare and expose the interfaces for options.
-export interface ICreateOptions extends IInsertOptions {
-	isValidationDisabled?: boolean,
-}
-export interface ICountOptions extends IOptions {
-	isValidationDisabled?: boolean,
-}
-export interface IExistsOptions extends IOptions {
-	isValidationDisabled?: boolean,
-}
-export interface IFindOptions extends ISelectOptions {
-	isValidationDisabled?: boolean,
-}
-export interface IModifyOptions extends IUpdateOptions {
-	isFilterValidationDisabled?: boolean,
-	isValuesValidationDisabled?: boolean,
-}
-export interface IDestroyOptions extends IDeleteOptions {
-	isValidationDisabled?: boolean,
-}
+	CreateEventEmitter,
+	ICreateEventEmitter,
+} from '.../src/event_emitter/create'
+import {
+	DestroyEventEmitter,
+	IDestroyEventEmitter,
+} from '.../src/event_emitter/destroy'
+import {
+	FindEventEmitter,
+	IFindEventEmitter,
+} from '.../src/event_emitter/find'
+import {
+	IModifyEventEmitter,
+	ModifyEventEmitter,
+} from '.../src/event_emitter/modify'
+import executor from '.../src/executor'
+import { Model } from '.../src/model'
+import {
+	ICountOptions,
+	ICreateOptions,
+	IDestroyOptions,
+	IExistsOptions,
+	IFindOptions,
+	IModifyOptions,
+} from '.../src/options/base'
 
 // Define interface for the returned count row.
 export interface IReturnedCountRow {
@@ -58,6 +54,27 @@ export class BaseModel<
 	IDeleteFilterItem
 > {
 	/**
+	 * The event emitter for create methods.
+	 */
+	protected readonly createEvents: ICreateEventEmitter<IEntity, ICreateValues>
+		= new CreateEventEmitter<IEntity, ICreateValues>()
+	/**
+	 * The event emitter for find methods.
+	 */
+	protected readonly findEvents: IFindEventEmitter<IEntity, IFindFilterItem>
+		= new FindEventEmitter<IEntity, IFindFilterItem>()
+	/**
+	 * The event emitter for modify methods.
+	 */
+	protected readonly modifyEvents: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>
+		= new ModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>()
+	/**
+	 * The event emitter for destroy methods.
+	 */
+	protected readonly destroyEvents: IDestroyEventEmitter<IEntity, IDestroyFilterItem>
+		= new DestroyEventEmitter<IEntity, IDestroyFilterItem>()
+
+	/**
 	 * Create multiple entities of the model, using the provided array of values.
 	 * This is a simplified default implementation that validates the inputs and sends them directly to the database.
 	 * @param this An instance of the class.
@@ -82,16 +99,59 @@ export class BaseModel<
 		values: ICreateValues[],
 		options: ICreateOptions = {},
 	) {
-		// Optionally validate the submitted create values.
-		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
-			this._validateCreateValues(values)
-		}
+		// Emit the before validation event.
+		this.createEvents.emit('beforeValidation', {
+			values,
+			options,
+		})
+
+		// Validate the submitted create values.
+		this.validateCreateValues(values)
 
 		// Prepare the query builder for the insert operation.
-		const queryBuilder = this.insertQueryBuilder(this._transformCreateValues(values), options)
+		const queryBuilder = this.insertQueryBuilder(this.transformCreateValues(values), options)
 
-		// Execute the prepared query builder.
-		const entities = await executor(queryBuilder) as IEntity[]
+		// Emit the after validation event.
+		this.createEvents.emit('afterValidation', {
+			queryBuilder,
+			values,
+			options,
+		})
+
+		// Determine if a transaction is required.
+		const entities = await (this.createEvents.hasExecuteListener()
+			? this.connection.transaction(async (transaction) => {
+				// Emit the before execute event.
+				this.createEvents.emit('beforeExecute', {
+					transaction,
+					queryBuilder,
+					values,
+					options,
+				})
+
+				// Execute the prepared query builder.
+				const result = await executor(queryBuilder) as IEntity[]
+
+				// Emit the after execute event.
+				this.createEvents.emit('afterExecute', {
+					transaction,
+					entities: result,
+					values,
+					options,
+				})
+
+				// Return the query result.
+				return result
+			}, options.transaction)
+			// Execute the prepared query builder.
+			: executor(queryBuilder) as Promise<IEntity[]>)
+
+		// Emit the before return event.
+		this.createEvents.emit('beforeReturn', {
+			entities,
+			values,
+			options,
+		})
 
 		// Return the created entities.
 		return entities
@@ -161,16 +221,59 @@ export class BaseModel<
 		filterExpression: IFindFilterItem | IFindFilterItem[],
 		options: IFindOptions = {},
 	) {
-		// Optionally validate the submitted filter expression.
-		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
-			this._validateFindFilterExpression(filterExpression)
-		}
+		// Emit the before validation event.
+		this.findEvents.emit('beforeValidation', {
+			filterExpression,
+			options,
+		})
+
+		// Validate the submitted filter expression.
+		this.validateFindFilterExpression(filterExpression)
 
 		// Prepare the query builder for the select operation.
-		const queryBuilder = this.selectQueryBuilder(this._transformFindFilterExpression(filterExpression), options)
+		const queryBuilder = this.selectQueryBuilder(this.transformFindFilterExpression(filterExpression), options)
 
-		// Execute the prepared query builder.
-		const entities = await executor(queryBuilder) as IEntity[]
+		// Emit the after validation event.
+		this.findEvents.emit('afterValidation', {
+			queryBuilder,
+			filterExpression,
+			options,
+		})
+
+		// Determine if a transaction is required.
+		const entities = await (this.findEvents.hasExecuteListener()
+			? this.connection.transaction(async (transaction) => {
+				// Emit the before execute event.
+				this.findEvents.emit('beforeExecute', {
+					transaction,
+					queryBuilder,
+					filterExpression,
+					options,
+				})
+
+				// Execute the prepared query builder.
+				const result = await executor(queryBuilder) as IEntity[]
+
+				// Emit the after execute event.
+				this.findEvents.emit('afterExecute', {
+					transaction,
+					entities: result,
+					filterExpression,
+					options,
+				})
+
+				// Return the query result.
+				return result
+			}, options.transaction)
+			// Execute the prepared query builder.
+			: executor(queryBuilder) as Promise<IEntity[]>)
+
+		// Emit the before return event.
+		this.findEvents.emit('beforeReturn', {
+			entities,
+			filterExpression,
+			options,
+		})
 
 		// Return the found entities.
 		return entities
@@ -238,13 +341,11 @@ export class BaseModel<
 		filterExpression: IFindFilterItem | IFindFilterItem[],
 		options: ICountOptions = {},
 	) {
-		// Optionally validate the submitted filter expression.
-		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
-			this._validateFindFilterExpression(filterExpression)
-		}
+		// Validate the submitted filter expression.
+		this.validateFindFilterExpression(filterExpression)
 
 		// Prepare the query builder for the select operation with a count.
-		const queryBuilder = this.selectQueryBuilder(this._transformFindFilterExpression(filterExpression), options)
+		const queryBuilder = this.selectQueryBuilder(this.transformFindFilterExpression(filterExpression), options)
 			.count()
 
 		// Execute the prepared query.
@@ -284,13 +385,11 @@ export class BaseModel<
 		filterExpression: IFindFilterItem | IFindFilterItem[],
 		options: IExistsOptions = {},
 	) {
-		// Optionally validate the submitted filter expression.
-		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
-			this._validateFindFilterExpression(filterExpression)
-		}
+		// Validate the submitted filter expression.
+		this.validateFindFilterExpression(filterExpression)
 
 		// Prepare the query builder for the select operation with a singular limit.
-		const queryBuilder = this.selectQueryBuilder(this._transformFindFilterExpression(filterExpression), options)
+		const queryBuilder = this.selectQueryBuilder(this.transformFindFilterExpression(filterExpression), options)
 			.limit(1)
 
 		// Execute the prepared query.
@@ -327,25 +426,71 @@ export class BaseModel<
 		values: IModifyValues,
 		options: IModifyOptions = {},
 	) {
-		// Optionally validate the submitted filter expression.
-		if ((options.isFilterValidationDisabled === undefined) || !options.isFilterValidationDisabled) {
-			this._validateModifyFilterExpression(filterExpression)
-		}
+		// Emit the before validation event.
+		this.modifyEvents.emit('beforeValidation', {
+			filterExpression,
+			values,
+			options,
+		})
 
-		// Optionally validate the submitted modify values.
-		if ((options.isValuesValidationDisabled === undefined) || !options.isValuesValidationDisabled) {
-			this._validateModifyValues(values)
-		}
+		// Validate the submitted filter expression.
+		this.validateModifyFilterExpression(filterExpression)
+
+		// Validate the submitted modify values.
+		this.validateModifyValues(values)
 
 		// Prepare the query builder for the update operation.
 		const queryBuilder = this.updateQueryBuilder(
-			this._transformModifyFilterExpression(filterExpression),
-			this._transformModifyValues(values), options)
+			this.transformModifyFilterExpression(filterExpression),
+			this.transformModifyValues(values), options)
 
-		// Execute the prepared query builder.
-		const entities = await executor(queryBuilder) as IEntity[]
+		// Emit the after validation event.
+		this.modifyEvents.emit('afterValidation', {
+			queryBuilder,
+			filterExpression,
+			values,
+			options,
+		})
 
-		// Return the created entities.
+		// Determine if a transaction is required.
+		const entities = await (this.modifyEvents.hasExecuteListener()
+			? this.connection.transaction(async (transaction) => {
+				// Emit the before execute event.
+				this.modifyEvents.emit('beforeExecute', {
+					transaction,
+					queryBuilder,
+					filterExpression,
+					values,
+					options,
+				})
+
+				// Execute the prepared query builder.
+				const result = await executor(queryBuilder) as IEntity[]
+
+				// Emit the after execute event.
+				this.modifyEvents.emit('afterExecute', {
+					transaction,
+					entities: result,
+					filterExpression,
+					values,
+					options,
+				})
+
+				// Return the query result.
+				return result
+			}, options.transaction)
+			// Execute the prepared query builder.
+			: executor(queryBuilder) as Promise<IEntity[]>)
+
+		// Emit the before return event.
+		this.modifyEvents.emit('beforeReturn', {
+			entities,
+			filterExpression,
+			values,
+			options,
+		})
+
+		// Return the modified entities.
 		return entities
 	}
 
@@ -382,7 +527,7 @@ export class BaseModel<
 				transaction,
 			})
 
-			// Return the updated entity.
+			// Return the modified entity.
 			return this._retrieveOne(entities)
 		}, options.transaction)
 	}
@@ -412,16 +557,59 @@ export class BaseModel<
 		filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
 		options: IDestroyOptions = {},
 	) {
-		// Optionally validate the submitted filter expression.
-		if ((options.isValidationDisabled === undefined) || !options.isValidationDisabled) {
-			this._validateDestroyFilterExpression(filterExpression)
-		}
+		// Emit the before validation event.
+		this.destroyEvents.emit('beforeValidation', {
+			filterExpression,
+			options,
+		})
+
+		// Validate the submitted filter expression.
+		this.validateDestroyFilterExpression(filterExpression)
 
 		// Prepare the query builder for the delete operation.
-		const queryBuilder = this.deleteQueryBuilder(this._transformDestroyFilterExpression(filterExpression), options)
+		const queryBuilder = this.deleteQueryBuilder(this.transformDestroyFilterExpression(filterExpression), options)
 
-		// Execute the prepared query.
-		const entities = await executor(queryBuilder) as IEntity[]
+		// Emit the after validation event.
+		this.destroyEvents.emit('afterValidation', {
+			queryBuilder,
+			filterExpression,
+			options,
+		})
+
+		// Determine if a transaction is required.
+		const entities = await (this.destroyEvents.hasExecuteListener()
+			? this.connection.transaction(async (transaction) => {
+				// Emit the before execute event.
+				this.destroyEvents.emit('beforeExecute', {
+					transaction,
+					queryBuilder,
+					filterExpression,
+					options,
+				})
+
+				// Execute the prepared query builder.
+				const result = await executor(queryBuilder) as IEntity[]
+
+				// Emit the after execute event.
+				this.destroyEvents.emit('afterExecute', {
+					transaction,
+					entities: result,
+					filterExpression,
+					options,
+				})
+
+				// Return the query result.
+				return result
+			}, options.transaction)
+			// Execute the prepared query builder.
+			: executor(queryBuilder) as Promise<IEntity[]>)
+
+		// Emit the before return event.
+		this.destroyEvents.emit('beforeReturn', {
+			entities,
+			filterExpression,
+			options,
+		})
 
 		// Return the destroyed entities.
 		return entities
@@ -470,7 +658,7 @@ export class BaseModel<
 	 * @param values An array of values used to create the entities.
 	 * @throws ValidationError.
 	 */
-	protected _validateCreateValues(
+	protected validateCreateValues(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -494,7 +682,7 @@ export class BaseModel<
 	 * @param this An instance of the class.
 	 * @param values An array of values used to create the entities.
 	 */
-	protected _transformCreateValues(
+	protected transformCreateValues(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -520,7 +708,7 @@ export class BaseModel<
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected _validateFindFilterExpression(
+	protected validateFindFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -545,7 +733,7 @@ export class BaseModel<
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected _transformFindFilterExpression(
+	protected transformFindFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -571,7 +759,7 @@ export class BaseModel<
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected _validateModifyFilterExpression(
+	protected validateModifyFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -596,7 +784,7 @@ export class BaseModel<
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected _transformModifyFilterExpression(
+	protected transformModifyFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -622,7 +810,7 @@ export class BaseModel<
 	 * @param values Values used to modify the matching entities.
 	 * @throws ValidationError.
 	 */
-	protected _validateModifyValues(
+	protected validateModifyValues(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -647,7 +835,7 @@ export class BaseModel<
 	 * @param values Values used to modify the matching entities.
 	 * @throws ValidationError.
 	 */
-	protected _transformModifyValues(
+	protected transformModifyValues(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -673,7 +861,7 @@ export class BaseModel<
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected _validateDestroyFilterExpression(
+	protected validateDestroyFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
@@ -698,7 +886,7 @@ export class BaseModel<
 	 * @param filterExpression A filter expression used to build the query and specify the results.
 	 * @throws ValidationError.
 	 */
-	protected _transformDestroyFilterExpression(
+	protected transformDestroyFilterExpression(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,

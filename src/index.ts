@@ -10,26 +10,32 @@ export { default as UniqueConstraintViolationError } from '.../src/error/unique_
 // Expose the executor function.
 export { default as executor } from '.../src/executor'
 
+// Expose the event emitter classes.
+export {
+	BaseEventEmitter,
+	IBaseEventEmitter,
+} from '.../src/event_emitter'
+export {
+	CreateEventEmitter,
+	ICreateEventEmitter,
+} from '.../src/event_emitter/create'
+export {
+	DestroyEventEmitter,
+	IDestroyEventEmitter,
+} from '.../src/event_emitter/destroy'
+export {
+	FindEventEmitter,
+	IFindEventEmitter,
+} from '.../src/event_emitter/find'
+export {
+	IModifyEventEmitter,
+	ModifyEventEmitter,
+} from '.../src/event_emitter/modify'
+
 // Expose the model classes, interfaces and types.
-export {
-	IInsertOptions,
-	ISelectOptions,
-	IUpdateOptions,
-	IDeleteOptions,
-	Model,
-} from '.../src/model'
-// export {
-// 	AttributeModel,
-// } from '.../src/model/attribute'
-export {
-	BaseModel,
-	ICreateOptions,
-	ICountOptions,
-	IDestroyOptions,
-	IExistsOptions,
-	IFindOptions,
-	IModifyOptions,
-} from '.../src/model/base'
+export { Model } from '.../src/model'
+// export { AttributeModel } from '.../src/model/attribute'
+export { BaseModel } from '.../src/model/base'
 export { GeneralModel } from '.../src/model/general'
 // export { GeneralAttributeModel } from '.../src/model/general/attribute'
 export { GeneralBaseModel } from '.../src/model/general/base'
@@ -48,6 +54,22 @@ export {
 export { KeyModel } from '.../src/model/key'
 export { NumberKeyModel } from '.../src/model/number_key'
 export { StringKeyModel } from '.../src/model/string_key'
+
+// Expose the options interfaces.
+export {
+	IInsertOptions,
+	ISelectOptions,
+	IUpdateOptions,
+	IDeleteOptions,
+} from '.../src/options'
+export {
+	ICreateOptions,
+	ICountOptions,
+	IDestroyOptions,
+	IExistsOptions,
+	IFindOptions,
+	IModifyOptions,
+} from '.../src/options/base'
 
 // Expose the query modifier functions.
 export { default as filerExpressionQueryModifier } from '.../src/modifier/query/filter_expression'

@@ -1,10 +1,10 @@
 // Load local modules.
+import { BaseModel } from '.../src/model/base'
 import {
-	BaseModel,
 	IDestroyOptions,
 	IFindOptions,
 	IModifyOptions,
-} from '.../src/model/base'
+} from '.../src/options/base'
 
 // Load npm modules.
 import * as lodash from 'lodash'

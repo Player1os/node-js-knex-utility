@@ -2,48 +2,17 @@
 import { Connection } from '.../src/connection'
 import EmptyValuesError from '.../src/error/empty_values'
 import filterExpressionQueryModifier from '.../src/modifier/query/filter_expression'
+import {
+	IDeleteOptions,
+	IInsertOptions,
+	IOptions,
+	ISelectOptions,
+	IUpdateOptions,
+} from '.../src/options'
 
 // Load npm modules.
 import * as Knex from 'knex'
 import * as lodash from 'lodash'
-
-// Declare and expose the interfaces for options.
-export interface IOptions {
-	tableNameAlias?: string,
-	transaction?: Knex.Transaction,
-}
-export interface IReturningOptions extends IOptions {
-	returningFields?: string[],
-}
-export interface IInsertOptions {
-	isEmptyValuesVerificationDisabled?: boolean,
-	returningFields?: string[],
-	transaction?: Knex.Transaction,
-}
-export interface ISelectOptions extends IOptions {
-	tableNameAlias?: string,
-	fieldNameAliases?: {
-		[key: string]: string,
-	},
-	orderBy?: [{
-		column: string,
-		direction: string,
-	}],
-	page?: {
-		size: number,
-		number: number,
-	},
-	transaction?: Knex.Transaction,
-}
-export interface IUpdateOptions {
-	isEmptyValuesVerificationDisabled?: boolean,
-	returningFields?: string[],
-	transaction?: Knex.Transaction,
-}
-export interface IDeleteOptions {
-	returningFields?: string[],
-	transaction?: Knex.Transaction,
-}
 
 // Expose the base model class.
 export class Model<
@@ -185,16 +154,24 @@ export class Model<
 		// Prepare a query builder.
 		const queryBuilder = this.queryBuilder(options)
 
+		// Determine the field names and possible aliases to be used in the select.
+		let fieldNames = lodash.clone(this.fieldNames)
+		if (options.returningFields !== undefined) {
+			const returningFieldsSet = new Set(options.returningFields)
+			fieldNames = fieldNames.filter(returningFieldsSet.has)
+		}
+		if (options.fieldNameAliases !== undefined) {
+			const fieldNameAliases = options.fieldNameAliases
+			fieldNames = fieldNames.map((fieldName) => {
+				const fieldNameAlias = fieldNameAliases[fieldName]
+				return ((fieldNameAlias === undefined) || (fieldNameAlias === ''))
+					? fieldName
+					: `${fieldName} as ${fieldNameAlias}`
+			})
+		}
+
 		// Optionally use the supplied field name aliases to fill the select clause.
-		queryBuilder.select(
-			options.fieldNameAliases === undefined
-				? this.fieldNames
-				: lodash.map(options.fieldNameAliases, (fieldName, fieldAlias) => {
-					return fieldAlias === ''
-						? fieldName
-						: `${fieldName} as ${fieldAlias}`
-				}),
-		)
+		queryBuilder.select(fieldNames)
 
 		// Apply the filter expression query modifier.
 		filterExpressionQueryModifier(queryBuilder, filterExpression)
