@@ -106,10 +106,11 @@ export class BaseModel<
 		})
 
 		// Validate the submitted create values.
-		this.validateCreateValues(values)
+		this.validateCreateValues(values, options)
 
 		// Prepare the query builder for the insert operation.
-		const queryBuilder = this.insertQueryBuilder(this.transformCreateValues(values), options)
+		const queryBuilder = this.insertQueryBuilder(
+			this.transformCreateValues(values, options), options)
 
 		// Emit the after validation event.
 		await this.createEvents.emitAsync('afterValidation', {
@@ -228,10 +229,11 @@ export class BaseModel<
 		})
 
 		// Validate the submitted filter expression.
-		this.validateFindFilterExpression(filterExpression)
+		this.validateFindFilterExpression(filterExpression, options)
 
 		// Prepare the query builder for the select operation.
-		const queryBuilder = this.selectQueryBuilder(this.transformFindFilterExpression(filterExpression), options)
+		const queryBuilder = this.selectQueryBuilder(
+			this.transformFindFilterExpression(filterExpression, options), options)
 
 		// Emit the after validation event.
 		await this.findEvents.emitAsync('afterValidation', {
@@ -434,15 +436,15 @@ export class BaseModel<
 		})
 
 		// Validate the submitted filter expression.
-		this.validateModifyFilterExpression(filterExpression)
+		this.validateModifyFilterExpression(filterExpression, options)
 
 		// Validate the submitted modify values.
-		this.validateModifyValues(values)
+		this.validateModifyValues(values, options)
 
 		// Prepare the query builder for the update operation.
 		const queryBuilder = this.updateQueryBuilder(
-			this.transformModifyFilterExpression(filterExpression),
-			this.transformModifyValues(values), options)
+			this.transformModifyFilterExpression(filterExpression, options),
+			this.transformModifyValues(values, options), options)
 
 		// Emit the after validation event.
 		await this.modifyEvents.emitAsync('afterValidation', {
@@ -564,10 +566,11 @@ export class BaseModel<
 		})
 
 		// Validate the submitted filter expression.
-		this.validateDestroyFilterExpression(filterExpression)
+		this.validateDestroyFilterExpression(filterExpression, options)
 
 		// Prepare the query builder for the delete operation.
-		const queryBuilder = this.deleteQueryBuilder(this.transformDestroyFilterExpression(filterExpression), options)
+		const queryBuilder = this.deleteQueryBuilder(
+			this.transformDestroyFilterExpression(filterExpression, options), options)
 
 		// Emit the after validation event.
 		await this.destroyEvents.emitAsync('afterValidation', {
@@ -673,6 +676,7 @@ export class BaseModel<
 			IDeleteFilterItem
 		>,
 		_values: ICreateValues[],
+		_options: ICreateOptions = {},
 	) {
 		throw new Error('An unsupported method has been called.')
 	}
@@ -697,6 +701,7 @@ export class BaseModel<
 			IDeleteFilterItem
 		>,
 		values: ICreateValues[],
+		_options: ICreateOptions = {},
 	) {
 		return values as any as IInsertValues[]
 	}
@@ -723,7 +728,8 @@ export class BaseModel<
 			IDeleteFilterItem
 		>,
 		_filterExpression: IFindFilterItem | IFindFilterItem[],
-	)  {
+		_options: IFindOptions = {},
+	) {
 		throw new Error('An unsupported method has been called.')
 	}
 
@@ -748,6 +754,7 @@ export class BaseModel<
 			IDeleteFilterItem
 		>,
 		filterExpression: IFindFilterItem | IFindFilterItem[],
+		_options: IFindOptions = {},
 	) {
 		return filterExpression as any as ISelectFilterItem | ISelectFilterItem[]
 	}
@@ -774,6 +781,7 @@ export class BaseModel<
 			IDeleteFilterItem
 		>,
 		_filterExpression: IModifyFilterItem | IModifyFilterItem[],
+		_options: IModifyOptions = {},
 	) {
 		throw new Error('An unsupported method has been called.')
 	}
@@ -799,6 +807,7 @@ export class BaseModel<
 			IDeleteFilterItem
 		>,
 		filterExpression: IModifyFilterItem | IModifyFilterItem[],
+		_options: IModifyOptions = {},
 	) {
 		return filterExpression as any as IUpdateFilterItem | IUpdateFilterItem[]
 	}
@@ -825,6 +834,7 @@ export class BaseModel<
 			IDeleteFilterItem
 		>,
 		_values: IModifyValues,
+		_options: IModifyOptions = {},
 	) {
 		throw new Error('An unsupported method has been called.')
 	}
@@ -850,6 +860,7 @@ export class BaseModel<
 			IDeleteFilterItem
 		>,
 		values: IModifyValues,
+		_options: IModifyOptions = {},
 	) {
 		return values as any as IUpdateValues
 	}
@@ -876,7 +887,8 @@ export class BaseModel<
 			IDeleteFilterItem
 		>,
 		_filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
-	)  {
+		_options: IDestroyOptions = {},
+	) {
 		throw new Error('An unsupported method has been called.')
 	}
 
@@ -901,6 +913,7 @@ export class BaseModel<
 			IDeleteFilterItem
 		>,
 		filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
+		_options: IDestroyOptions = {},
 	) {
 		return filterExpression as any as IDeleteFilterItem | IDeleteFilterItem[]
 	}
