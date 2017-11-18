@@ -10,37 +10,37 @@ export interface IFindEventEmitter<
 	IEntity extends object,
 	IFindFilterItem extends object
 > extends BaseEventEmitter {
-	emit(this: IFindEventEmitter<IEntity, IFindFilterItem>,
+	emitAsync(this: IFindEventEmitter<IEntity, IFindFilterItem>,
 		event: 'beforeValidation', params: {
 			filterExpression: IFindFilterItem | IFindFilterItem[],
 			options: IFindOptions,
-		}): boolean
-	emit(this: IFindEventEmitter<IEntity, IFindFilterItem>,
+		}): Promise<boolean>
+	emitAsync(this: IFindEventEmitter<IEntity, IFindFilterItem>,
 		event: 'afterValidation', params: {
 			queryBuilder: Knex.QueryBuilder,
 			filterExpression: IFindFilterItem | IFindFilterItem[],
 			options: IFindOptions,
-		}): boolean
-	emit(this: IFindEventEmitter<IEntity, IFindFilterItem>,
+		}): Promise<boolean>
+	emitAsync(this: IFindEventEmitter<IEntity, IFindFilterItem>,
 		event: 'beforeExecute', params: {
 			transaction: Knex.Transaction,
 			queryBuilder: Knex.QueryBuilder,
 			filterExpression: IFindFilterItem | IFindFilterItem[],
 			options: IFindOptions,
-		}): boolean
-	emit(this: IFindEventEmitter<IEntity, IFindFilterItem>,
+		}): Promise<boolean>
+	emitAsync(this: IFindEventEmitter<IEntity, IFindFilterItem>,
 		event: 'afterExecute', params: {
 			transaction: Knex.Transaction,
 			entities: IEntity[],
 			filterExpression: IFindFilterItem | IFindFilterItem[],
 			options: IFindOptions,
-		}): boolean
-	emit(this: IFindEventEmitter<IEntity, IFindFilterItem>,
+		}): Promise<boolean>
+	emitAsync(this: IFindEventEmitter<IEntity, IFindFilterItem>,
 		event: 'beforeReturn', params: {
 			entities: IEntity[],
 			filterExpression: IFindFilterItem | IFindFilterItem[],
 			options: IFindOptions,
-		}): boolean
+		}): Promise<boolean>
 
 	on(this: IFindEventEmitter<IEntity, IFindFilterItem>,
 		event: 'beforeValidation', listener: (params: {
@@ -73,6 +73,37 @@ export interface IFindEventEmitter<
 			filterExpression: IFindFilterItem | IFindFilterItem[],
 			options: IFindOptions,
 		}) => void): this
+	onAsync(this: IFindEventEmitter<IEntity, IFindFilterItem>,
+		event: 'beforeValidation', listener: (params: {
+			filterExpression: IFindFilterItem | IFindFilterItem[],
+			options: IFindOptions,
+		}) => Promise<void>): this
+	onAsync(this: IFindEventEmitter<IEntity, IFindFilterItem>,
+		event: 'afterValidation', listener: (params: {
+			queryBuilder: Knex.QueryBuilder,
+			filterExpression: IFindFilterItem | IFindFilterItem[],
+			options: IFindOptions,
+		}) => Promise<void>): this
+	onAsync(this: IFindEventEmitter<IEntity, IFindFilterItem>,
+		event: 'beforeExecute', listener: (params: {
+			transaction: Knex.Transaction,
+			queryBuilder: Knex.QueryBuilder,
+			filterExpression: IFindFilterItem | IFindFilterItem[],
+			options: IFindOptions,
+		}) => Promise<void>): this
+	onAsync(this: IFindEventEmitter<IEntity, IFindFilterItem>,
+		event: 'afterExecute', listener: (params: {
+			transaction: Knex.Transaction,
+			entities: IEntity[],
+			filterExpression: IFindFilterItem | IFindFilterItem[],
+			options: IFindOptions,
+		}) => Promise<void>): this
+	onAsync(this: IFindEventEmitter<IEntity, IFindFilterItem>,
+		event: 'beforeReturn', listener: (params: {
+			entities: IEntity[],
+			filterExpression: IFindFilterItem | IFindFilterItem[],
+			options: IFindOptions,
+		}) => Promise<void>): this
 }
 
 // Expose the find event emitter class.

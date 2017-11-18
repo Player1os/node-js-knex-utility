@@ -11,10 +11,7 @@ export { default as UniqueConstraintViolationError } from '.../src/error/unique_
 export { default as executor } from '.../src/executor'
 
 // Expose the event emitter classes.
-export {
-	BaseEventEmitter,
-	IBaseEventEmitter,
-} from '.../src/event_emitter'
+export { BaseEventEmitter } from '.../src/event_emitter'
 export {
 	CreateEventEmitter,
 	ICreateEventEmitter,

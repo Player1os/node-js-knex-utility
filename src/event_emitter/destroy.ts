@@ -10,37 +10,37 @@ export interface IDestroyEventEmitter<
 	IEntity extends object,
 	IDestroyFilterItem extends object
 > extends BaseEventEmitter {
-	emit(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
+	emitAsync(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
 		event: 'beforeValidation', params: {
 			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
 			options: IDestroyOptions,
-		}): boolean
-	emit(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
+		}): Promise<boolean>
+	emitAsync(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
 		event: 'afterValidation', params: {
 			queryBuilder: Knex.QueryBuilder,
 			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
 			options: IDestroyOptions,
-		}): boolean
-	emit(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
+		}): Promise<boolean>
+	emitAsync(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
 		event: 'beforeExecute', params: {
 			transaction: Knex.Transaction,
 			queryBuilder: Knex.QueryBuilder,
 			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
 			options: IDestroyOptions,
-		}): boolean
-	emit(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
+		}): Promise<boolean>
+	emitAsync(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
 		event: 'afterExecute', params: {
 			transaction: Knex.Transaction,
 			entities: IEntity[],
 			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
 			options: IDestroyOptions,
-		}): boolean
-	emit(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
+		}): Promise<boolean>
+	emitAsync(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
 		event: 'beforeReturn', params: {
 			entities: IEntity[],
 			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
 			options: IDestroyOptions,
-		}): boolean
+		}): Promise<boolean>
 
 	on(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
 		event: 'beforeValidation', listener: (params: {
@@ -73,6 +73,37 @@ export interface IDestroyEventEmitter<
 			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
 			options: IDestroyOptions,
 		}) => void): this
+	onAsync(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
+		event: 'beforeValidation', listener: (params: {
+			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
+			options: IDestroyOptions,
+		}) => Promise<void>): this
+	onAsync(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
+		event: 'afterValidation', listener: (params: {
+			queryBuilder: Knex.QueryBuilder,
+			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
+			options: IDestroyOptions,
+		}) => Promise<void>): this
+	onAsync(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
+		event: 'beforeExecute', listener: (params: {
+			transaction: Knex.Transaction,
+			queryBuilder: Knex.QueryBuilder,
+			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
+			options: IDestroyOptions,
+		}) => Promise<void>): this
+	onAsync(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
+		event: 'afterExecute', listener: (params: {
+			transaction: Knex.Transaction,
+			entities: IEntity[],
+			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
+			options: IDestroyOptions,
+		}) => Promise<void>): this
+	onAsync(this: IDestroyEventEmitter<IEntity, IDestroyFilterItem>,
+		event: 'beforeReturn', listener: (params: {
+			entities: IEntity[],
+			filterExpression: IDestroyFilterItem | IDestroyFilterItem[],
+			options: IDestroyOptions,
+		}) => Promise<void>): this
 }
 
 // Expose the destroy event emitter class.

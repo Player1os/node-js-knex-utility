@@ -100,7 +100,7 @@ export class BaseModel<
 		options: ICreateOptions = {},
 	) {
 		// Emit the before validation event.
-		this.createEvents.emit('beforeValidation', {
+		await this.createEvents.emitAsync('beforeValidation', {
 			values,
 			options,
 		})
@@ -112,7 +112,7 @@ export class BaseModel<
 		const queryBuilder = this.insertQueryBuilder(this.transformCreateValues(values), options)
 
 		// Emit the after validation event.
-		this.createEvents.emit('afterValidation', {
+		await this.createEvents.emitAsync('afterValidation', {
 			queryBuilder,
 			values,
 			options,
@@ -122,7 +122,7 @@ export class BaseModel<
 		const entities = await (this.createEvents.hasExecuteListener()
 			? this.connection.transaction(async (transaction) => {
 				// Emit the before execute event.
-				this.createEvents.emit('beforeExecute', {
+				await this.createEvents.emitAsync('beforeExecute', {
 					transaction,
 					queryBuilder,
 					values,
@@ -133,7 +133,7 @@ export class BaseModel<
 				const result = await executor(queryBuilder) as IEntity[]
 
 				// Emit the after execute event.
-				this.createEvents.emit('afterExecute', {
+				await this.createEvents.emitAsync('afterExecute', {
 					transaction,
 					entities: result,
 					values,
@@ -147,7 +147,7 @@ export class BaseModel<
 			: executor(queryBuilder) as Promise<IEntity[]>)
 
 		// Emit the before return event.
-		this.createEvents.emit('beforeReturn', {
+		await this.createEvents.emitAsync('beforeReturn', {
 			entities,
 			values,
 			options,
@@ -222,7 +222,7 @@ export class BaseModel<
 		options: IFindOptions = {},
 	) {
 		// Emit the before validation event.
-		this.findEvents.emit('beforeValidation', {
+		await this.findEvents.emitAsync('beforeValidation', {
 			filterExpression,
 			options,
 		})
@@ -234,7 +234,7 @@ export class BaseModel<
 		const queryBuilder = this.selectQueryBuilder(this.transformFindFilterExpression(filterExpression), options)
 
 		// Emit the after validation event.
-		this.findEvents.emit('afterValidation', {
+		await this.findEvents.emitAsync('afterValidation', {
 			queryBuilder,
 			filterExpression,
 			options,
@@ -244,7 +244,7 @@ export class BaseModel<
 		const entities = await (this.findEvents.hasExecuteListener()
 			? this.connection.transaction(async (transaction) => {
 				// Emit the before execute event.
-				this.findEvents.emit('beforeExecute', {
+				await this.findEvents.emitAsync('beforeExecute', {
 					transaction,
 					queryBuilder,
 					filterExpression,
@@ -255,7 +255,7 @@ export class BaseModel<
 				const result = await executor(queryBuilder) as IEntity[]
 
 				// Emit the after execute event.
-				this.findEvents.emit('afterExecute', {
+				await this.findEvents.emitAsync('afterExecute', {
 					transaction,
 					entities: result,
 					filterExpression,
@@ -269,7 +269,7 @@ export class BaseModel<
 			: executor(queryBuilder) as Promise<IEntity[]>)
 
 		// Emit the before return event.
-		this.findEvents.emit('beforeReturn', {
+		await this.findEvents.emitAsync('beforeReturn', {
 			entities,
 			filterExpression,
 			options,
@@ -427,7 +427,7 @@ export class BaseModel<
 		options: IModifyOptions = {},
 	) {
 		// Emit the before validation event.
-		this.modifyEvents.emit('beforeValidation', {
+		await this.modifyEvents.emitAsync('beforeValidation', {
 			filterExpression,
 			values,
 			options,
@@ -445,7 +445,7 @@ export class BaseModel<
 			this.transformModifyValues(values), options)
 
 		// Emit the after validation event.
-		this.modifyEvents.emit('afterValidation', {
+		await this.modifyEvents.emitAsync('afterValidation', {
 			queryBuilder,
 			filterExpression,
 			values,
@@ -456,7 +456,7 @@ export class BaseModel<
 		const entities = await (this.modifyEvents.hasExecuteListener()
 			? this.connection.transaction(async (transaction) => {
 				// Emit the before execute event.
-				this.modifyEvents.emit('beforeExecute', {
+				await this.modifyEvents.emitAsync('beforeExecute', {
 					transaction,
 					queryBuilder,
 					filterExpression,
@@ -468,7 +468,7 @@ export class BaseModel<
 				const result = await executor(queryBuilder) as IEntity[]
 
 				// Emit the after execute event.
-				this.modifyEvents.emit('afterExecute', {
+				await this.modifyEvents.emitAsync('afterExecute', {
 					transaction,
 					entities: result,
 					filterExpression,
@@ -483,7 +483,7 @@ export class BaseModel<
 			: executor(queryBuilder) as Promise<IEntity[]>)
 
 		// Emit the before return event.
-		this.modifyEvents.emit('beforeReturn', {
+		await this.modifyEvents.emitAsync('beforeReturn', {
 			entities,
 			filterExpression,
 			values,
@@ -558,7 +558,7 @@ export class BaseModel<
 		options: IDestroyOptions = {},
 	) {
 		// Emit the before validation event.
-		this.destroyEvents.emit('beforeValidation', {
+		await this.destroyEvents.emitAsync('beforeValidation', {
 			filterExpression,
 			options,
 		})
@@ -570,7 +570,7 @@ export class BaseModel<
 		const queryBuilder = this.deleteQueryBuilder(this.transformDestroyFilterExpression(filterExpression), options)
 
 		// Emit the after validation event.
-		this.destroyEvents.emit('afterValidation', {
+		await this.destroyEvents.emitAsync('afterValidation', {
 			queryBuilder,
 			filterExpression,
 			options,
@@ -580,7 +580,7 @@ export class BaseModel<
 		const entities = await (this.destroyEvents.hasExecuteListener()
 			? this.connection.transaction(async (transaction) => {
 				// Emit the before execute event.
-				this.destroyEvents.emit('beforeExecute', {
+				await this.destroyEvents.emitAsync('beforeExecute', {
 					transaction,
 					queryBuilder,
 					filterExpression,
@@ -591,7 +591,7 @@ export class BaseModel<
 				const result = await executor(queryBuilder) as IEntity[]
 
 				// Emit the after execute event.
-				this.destroyEvents.emit('afterExecute', {
+				await this.destroyEvents.emitAsync('afterExecute', {
 					transaction,
 					entities: result,
 					filterExpression,
@@ -605,7 +605,7 @@ export class BaseModel<
 			: executor(queryBuilder) as Promise<IEntity[]>)
 
 		// Emit the before return event.
-		this.destroyEvents.emit('beforeReturn', {
+		await this.destroyEvents.emitAsync('beforeReturn', {
 			entities,
 			filterExpression,
 			options,

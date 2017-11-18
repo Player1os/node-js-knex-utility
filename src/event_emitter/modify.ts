@@ -11,42 +11,42 @@ export interface IModifyEventEmitter<
 	IModifyFilterItem extends object,
 	IModifyValues extends object
 > extends BaseEventEmitter {
-	emit(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
+	emitAsync(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
 		event: 'beforeValidation', params: {
 			filterExpression: IModifyFilterItem | IModifyFilterItem[],
 			values: IModifyValues,
 			options: IModifyOptions,
-		}): boolean
-	emit(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
+		}): Promise<boolean>
+	emitAsync(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
 		event: 'afterValidation', params: {
 			queryBuilder: Knex.QueryBuilder,
 			filterExpression: IModifyFilterItem | IModifyFilterItem[],
 			values: IModifyValues,
 			options: IModifyOptions,
-		}): boolean
-	emit(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
+		}): Promise<boolean>
+	emitAsync(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
 		event: 'beforeExecute', params: {
 			transaction: Knex.Transaction,
 			queryBuilder: Knex.QueryBuilder,
 			filterExpression: IModifyFilterItem | IModifyFilterItem[],
 			values: IModifyValues,
 			options: IModifyOptions,
-		}): boolean
-	emit(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
+		}): Promise<boolean>
+	emitAsync(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
 		event: 'afterExecute', params: {
 			transaction: Knex.Transaction,
 			entities: IEntity[],
 			filterExpression: IModifyFilterItem | IModifyFilterItem[],
 			values: IModifyValues,
 			options: IModifyOptions,
-		}): boolean
-	emit(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
+		}): Promise<boolean>
+	emitAsync(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
 		event: 'beforeReturn', params: {
 			entities: IEntity[],
 			filterExpression: IModifyFilterItem | IModifyFilterItem[],
 			values: IModifyValues,
 			options: IModifyOptions,
-		}): boolean
+		}): Promise<boolean>
 
 	on(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
 		event: 'beforeValidation', listener: (params: {
@@ -84,6 +84,42 @@ export interface IModifyEventEmitter<
 			values: IModifyValues,
 			options: IModifyOptions,
 		}) => void): this
+	onAsync(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
+		event: 'beforeValidation', listener: (params: {
+			filterExpression: IModifyFilterItem | IModifyFilterItem[],
+			values: IModifyValues,
+			options: IModifyOptions,
+		}) => Promise<void>): this
+	onAsync(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
+		event: 'afterValidation', listener: (params: {
+			queryBuilder: Knex.QueryBuilder,
+			filterExpression: IModifyFilterItem | IModifyFilterItem[],
+			values: IModifyValues,
+			options: IModifyOptions,
+		}) => Promise<void>): this
+	onAsync(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
+		event: 'beforeExecute', listener: (params: {
+			transaction: Knex.Transaction,
+			queryBuilder: Knex.QueryBuilder,
+			filterExpression: IModifyFilterItem | IModifyFilterItem[],
+			values: IModifyValues,
+			options: IModifyOptions,
+		}) => Promise<void>): this
+	onAsync(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
+		event: 'afterExecute', listener: (params: {
+			transaction: Knex.Transaction,
+			entities: IEntity[],
+			filterExpression: IModifyFilterItem | IModifyFilterItem[],
+			values: IModifyValues,
+			options: IModifyOptions,
+		}) => Promise<void>): this
+	onAsync(this: IModifyEventEmitter<IEntity, IModifyFilterItem, IModifyValues>,
+		event: 'beforeReturn', listener: (params: {
+			entities: IEntity[],
+			filterExpression: IModifyFilterItem | IModifyFilterItem[],
+			values: IModifyValues,
+			options: IModifyOptions,
+		}) => Promise<void>): this
 }
 
 // Expose the modify event emitter class.
