@@ -158,7 +158,9 @@ export class Model<
 		let fieldNames = lodash.clone(this.fieldNames)
 		if (options.returningFields !== undefined) {
 			const returningFieldsSet = new Set(options.returningFields)
-			fieldNames = fieldNames.filter(returningFieldsSet.has)
+			fieldNames = fieldNames.filter((fieldName) => {
+                		return returningFieldsSet.has(fieldName)
+            		})
 		}
 		if (options.fieldNameAliases !== undefined) {
 			const fieldNameAliases = options.fieldNameAliases
