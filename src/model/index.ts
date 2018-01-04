@@ -70,11 +70,9 @@ export class Model<
 		options: IOptions = {},
 	) {
 		// Initialize the query builder, may optionally contain an alias for the model's table.
-		const knexQueryBuilder = this.connection.instance(
-			(options.tableNameAlias === undefined)
+		const knexQueryBuilder = this.connection.instance(options.tableNameAlias === undefined
 			? this.tableName
-			: `${this.tableName} as ${options.tableNameAlias}`,
-		)
+			: `${this.tableName} as ${options.tableNameAlias}`)
 
 		// Optionally use the supplied transaction.
 		if (options.transaction !== undefined) {
@@ -119,7 +117,7 @@ export class Model<
 		options: IInsertOptions = {},
 	) {
 		// Optionally verify that the submitted values are not empty.
-		if ((options.isEmptyValuesVerificationDisabled === undefined) || !options.isEmptyValuesVerificationDisabled) {
+		if (options.isEmptyValuesVerificationDisabled !== true) {
 			if (lodash.isEmpty(values)) {
 				throw new EmptyValuesError()
 			}
@@ -159,14 +157,14 @@ export class Model<
 		if (options.returningFields !== undefined) {
 			const returningFieldsSet = new Set(options.returningFields)
 			fieldNames = fieldNames.filter((fieldName) => {
-                		return returningFieldsSet.has(fieldName)
-            		})
+				return returningFieldsSet.has(fieldName)
+			})
 		}
 		if (options.fieldNameAliases !== undefined) {
 			const fieldNameAliases = options.fieldNameAliases
 			fieldNames = fieldNames.map((fieldName) => {
 				const fieldNameAlias = fieldNameAliases[fieldName]
-				return ((fieldNameAlias === undefined) || (fieldNameAlias === ''))
+				return (fieldNameAlias === undefined) || (fieldNameAlias === '')
 					? fieldName
 					: `${fieldName} as ${fieldNameAlias}`
 			})
@@ -211,7 +209,7 @@ export class Model<
 		options: IUpdateOptions,
 	) {
 		// Optionally verify that the submitted values are not empty.
-		if ((options.isEmptyValuesVerificationDisabled === undefined) || !options.isEmptyValuesVerificationDisabled) {
+		if (options.isEmptyValuesVerificationDisabled !== true) {
 			if (lodash.isEmpty(values)) {
 				throw new EmptyValuesError()
 			}

@@ -28,6 +28,9 @@ import {
 	IModifyOptions,
 } from '.../src/options/base'
 
+// Load npm modules.
+import * as lodash from 'lodash'
+
 // Define interface for the returned count row.
 export interface IReturnedCountRow {
 	count: string,
@@ -192,7 +195,9 @@ export class BaseModel<
 			})
 
 			// Return the created entity.
-			return this._retrieveOne(entities)
+			return options.isOneVariantErrorDisabled === true
+				? lodash.head(entities) as IEntity
+				: this.retrieveOne(entities)
 		}, options.transaction)
 	}
 
@@ -314,7 +319,9 @@ export class BaseModel<
 			})
 
 			// Return the created entity.
-			return this._retrieveOne(entities)
+			return options.isOneVariantErrorDisabled === true
+				? lodash.head(entities) as IEntity
+				: this.retrieveOne(entities)
 		}, options.transaction)
 	}
 
@@ -530,7 +537,9 @@ export class BaseModel<
 			})
 
 			// Return the modified entity.
-			return this._retrieveOne(entities)
+			return options.isCountErrorDisabled === true
+				? lodash.head(entities) as IEntity
+				: this.retrieveOne(entities)
 		}, options.transaction)
 	}
 
@@ -650,7 +659,9 @@ export class BaseModel<
 			})
 
 			// Return the destroyed entity.
-			return this._retrieveOne(entities)
+			return options.isOneVariantErrorDisabled === true
+				? lodash.head(entities) as IEntity
+				: this.retrieveOne(entities)
 		}, options.transaction)
 	}
 
@@ -925,7 +936,7 @@ export class BaseModel<
 	 * @param entities Entities retrived by the execution of a query with results.
 	 * @throws EntityNotFoundError, MultipleEntitiesFoundError.
 	 */
-	protected _retrieveOne(
+	protected retrieveOne(
 		this: BaseModel<
 			IEntity,
 			ICreateValues,
